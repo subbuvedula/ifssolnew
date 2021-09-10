@@ -1,0 +1,116 @@
+{
+  "name" : "location.sync",
+  "rootClass" : "org.openapplications.oagis.x9.SyncLocationDocument",
+  "query" : "SELECT cf$_log_id, cf$_log_timestamp, cf$_log_type, cf$_action_code, cf$_type, cf$_id, cf$_name, cf$_note, cf$_parent1_type, cf$_parent1_id, cf$_parent2_type, cf$_parent2_id FROM <_SCHEMA_>.SOLINT_LOCATION_LOG_CLV WHERE cf$_process_flag = :STATE  ORDER BY cf$_log_id",
+  "sendQueue" : "com.ibaset.receive.request.location",
+  "mapperFunctionName" : "com.kickass.ifssol.mapper.SyncLocationMapper",
+  "updateStatus" : "true",
+  "cronExpression" : "*/10 * * * * *",
+  "enabled" : "true",
+  "updateStatement" : "DECLARE \nparam_log_id_ NUMBER;  \ninfo_                  VARCHAR2(32000); \nobjid_                 VARCHAR2(32000); \nobjversion_            VARCHAR2(32000); \nattr_                  VARCHAR2(32000); \nCURSOR get_record (log_id_ NUMBER) IS \nSELECT t.objid, t.objversion \nFROM <_SCHEMA_>.SOLINT_LOCATION_LOG_CLV t \nWHERE cf$_log_id = log_id_; \nBEGIN \nParam_log_id_ := :LOG_ID; \nOPEN get_record (param_log_id_); \nFETCH get_record INTO objid_, objversion_; \nCLOSE get_record; \nIF objid_ IS NOT NULL THEN \nClient_SYS.Clear_Attr(attr_); \nClient_SYS.Add_To_Attr('CF$_PROCESS_FLAG', 'DONE', attr_); \n<_SCHEMA_>.SOLINT_LOCATION_LOG_CLP.Modify__(info_, objid_, objversion_, attr_, 'DO'); \nEND IF; \nEND;",
+
+  "SolNodes": [
+    {
+      "name" : "SyncLocation",
+      "SolNodes" : [
+        {
+        "name" : "DataArea",
+        "SolNodes" : [
+          {
+            "name" : "Sync",
+            "SolNodes" : [{
+              "name" : "ActionCriteria",
+              "SolNodes" : [{
+                "name" : "ActionExpression",
+                "ifsSolMappings": [
+                  {
+                    "ifs": "CF$_ACTION_CODE",
+                    "sol": "ActionCode"
+                  }
+                ]
+              }]
+            }]
+          },
+          {
+          "name": "Location",
+          "ifsSolMappings": [
+            {
+              "ifs": "cf$_type",
+              "sol": "Type"
+            }
+          ],
+          "SolNodes" : [{
+            "name" : "ID",
+            "ifsSolMappings": [
+              {
+                "ifs": "cf$_id",
+                "sol": "StringValue"
+              }
+            ]
+          },
+          {
+            "name" : "Name",
+            "ifsSolMappings": [
+              {
+                "ifs": "cf$_name",
+                "sol": "StringValue"
+              }
+            ]
+          },
+            {
+              "name" : "UserArea",
+               "SolNodes" : [ {
+                 "name" : "LocationUserAreaType",
+                 "classType" : "com.ibaset.solumina.oagis.LocationUserAreaType",
+                 "SolNodes" : [
+                   {
+                   "name" : "ParentLocation",
+                   "ifsSolMappings": [
+                     {
+                       "ifs": "cf$_parent1_type",
+                       "sol": "Type"
+                     }
+                   ],
+                   "SolNodes" : [{
+                     "name" : "ID",
+                     "ifsSolMappings": [
+                       {
+                         "ifs": "cf$_parent1_id",
+                         "sol": "StringValue",
+                         "defaultIfs" : ""
+                       }
+                     ]
+                   }]
+                 },
+                   {
+                     "name" : "ParentLocation",
+                     "ifsSolMappings": [
+                       {
+                         "ifs": "cf$_parent2_type",
+                         "sol": "Type",
+                         "defaultIfs" : ""
+                       }
+                     ],
+                     "SolNodes" : [{
+                       "name" : "ID",
+                       "ifsSolMappings": [
+                         {
+                           "ifs": "cf$_parent2_id",
+                           "sol": "StringValue",
+                           "defaultIfs" : ""
+                         }
+                       ]
+                     }]
+                   }
+                   ]
+              }
+               ]
+           }
+          ]
+        }
+        ]
+      }
+      ]
+    }
+  ]
+}

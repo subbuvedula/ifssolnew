@@ -1,0 +1,33 @@
+allowed.ip.addresses=http://localhost,http://nas01.atnoc.com,http://10.10.10.6,http://10.10.10.7
+#allowed.ip.address.override=
+refresh.cache.async.on.demand=true
+dividends.calculation.enabled=false
+#refresh.cache.async.on.start
+server.port=8092
+persistenceTarget=mysql
+fixedDelay.in.milliseconds=30000
+
+# Number of ms to wait before throwing an exception if no connection is available.
+spring.datasource.tomcat.max-wait=10000
+
+# Maximum number of active connections that can be allocated from this pool at the same time.
+spring.datasource.tomcat.max-active=150
+
+# The minimum amount of time an object may sit idle in the pool before it is eligible for eviction. 
+#The default value is 60000 (60 seconds) - Setting to 10 minutes 
+spring.datasource.tomcat.minEvictableIdleTimeMillis=600000
+
+#Terminal details for downloading the files and collating the content
+terminal.btfile.path=/Users/subbuvedula/Downloads/dailyrecords
+#terminal.btfile.path=/mnt/terminals/btservices/dailyrecords
+terminal.password=na@123
+terminal.username=user1
+terminal.port=22
+terminals.fields=EntryType|Status|ProgramId|PoolName|EventId|PrincipalId|TerminalId|UniqueCode|GroupCode|Runners|BetQuantity|TotalAmount|EnclosurePrimaryKey|TerminalPrimaryKey|Timestamp
+terminals.fields.types=string|string|long|string|long|long|string|string|string|string|long|bigdecimal|long|long|long
+terminals.fields.valid.entry.types=sale|payout|cancel|cashin|cashout
+ftp.socket.timeout=400
+terminal.downloader.bean.name=fileDownloader
+
+#Payout Properties, tds in percentage
+payout.tds=30

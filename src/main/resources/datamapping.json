@@ -1,0 +1,64 @@
+{ "txnMappings": [
+  {
+    "name" : "location.sync",
+    "rootClass" : "org.openapplications.oagis.x9.SyncLocationDocument",
+    "query" : "SELECT cf$_log_id, cf$_log_timestamp, cf$_log_type, cf$_action_code, cf$_type, cf$_id, cf$_name, cf$_note, cf$_parent1_type, cf$_parent1_id, cf$_parent2_type, cf$_parent2_id FROM DKEN1APP.SOLINT_LOCATION_LOG_CLV WHERE cf$_process_flag = :STATE  ORDER BY cf$_log_id",
+    "sendQueue" : "com.ibaset.receive.request.location",
+    "mapperFunctionName" : "com.kickass.ifssol.mapper.SyncLocationMapper",
+    "updateStatus" : "true",
+    "cronExpression" : "*/10 * * * * *",
+    "enabled" : "true",
+    "ifsSolMappings": [
+      {
+        "ifs" : "cf$_type",
+        "sol" : "SyncLocation.DataArea.Location.Type"
+      } ,
+      {
+        "ifs" : "cf$_id",
+        "sol" : "SyncLocation.DataArea.Location.ID.StringValue",
+        "solType" : ""
+      },
+      {
+        "ifs" : "cf$_name",
+        "sol" : "SyncLocation.DataArea.Location.Name.StringValue",
+        "solType" : ""
+      },
+      {
+        "ifs" : "cf$_parent1_type",
+        "sol" : "ParentLocation.Type",
+        "solType" : ""
+      },
+      {
+        "ifs" : "cf$_parent1_id",
+        "sol" : "ParentLocation.ID",
+        "solType" : ""
+      },
+      {
+        "ifs" : "cf$_parent2_type",
+        "sol" : "ParentLocation.Type",
+        "solType" : ""
+      },
+      {
+        "ifs" : "cf$_parent2_id",
+        "sol" : "ParentLocation.ID",
+        "solType" : ""
+      }
+    ]
+  },
+  {
+    "name" : "",
+    "rootClass" : "",
+    "enabled" : "false",
+    "ifsSolMappings": [
+      {
+        "ifs" : "",
+        "sol" : ""
+      } ,
+      {
+        "ifs" : "",
+        "sol" : ""
+      }
+    ]
+  }
+]
+}

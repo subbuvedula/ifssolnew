@@ -1,0 +1,472 @@
+
+{
+  "name" : null,
+  "rootClass" : null,
+  "sendQueue" : null,
+  "receiveQueue" : null,
+  "mapperFunctionName" : null,
+  "enabled" : false,
+  "cronExpression" : null,
+  "query" : null,
+  "updateStatement" : null,
+  "updateStatus" : false,
+  "SolNodes" : [ {
+    "name" : "ProcessSplitWIP",
+    "ifsSolMappings" : [ {
+      "ifs" : "",
+      "sol" : "releaseID",
+      "solType" : "",
+      "defaultIfs" : ""
+    }, {
+      "ifs" : "",
+      "sol" : "xmlns",
+      "solType" : "",
+      "defaultIfs" : ""
+    } ],
+    "classType" : null,
+    "SolNodes" : [ {
+      "name" : "ApplicationArea",
+      "classType" : null,
+      "SolNodes" : [ {
+        "name" : "Sender",
+        "classType" : null,
+        "SolNodes" : [ {
+          "name" : "LogicalID",
+          "ifsSolMappings" : [ {
+            "ifs" : "",
+            "sol" : "StringValue",
+            "solType" : "",
+            "defaultIfs" : ""
+          } ],
+          "classType" : null
+        }, {
+          "name" : "ComponentID",
+          "ifsSolMappings" : [ {
+            "ifs" : "",
+            "sol" : "StringValue",
+            "solType" : "",
+            "defaultIfs" : ""
+          } ],
+          "classType" : null
+        }, {
+          "name" : "TaskID",
+          "ifsSolMappings" : [ {
+            "ifs" : "",
+            "sol" : "StringValue",
+            "solType" : "",
+            "defaultIfs" : ""
+          } ],
+          "classType" : null
+        }, {
+          "name" : "ReferenceID",
+          "ifsSolMappings" : [ {
+            "ifs" : "",
+            "sol" : "StringValue",
+            "solType" : "",
+            "defaultIfs" : ""
+          } ],
+          "classType" : null
+        }, {
+          "name" : "ConfirmationCode",
+          "ifsSolMappings" : [ {
+            "ifs" : "",
+            "sol" : "ObjectValue",
+            "solType" : "",
+            "defaultIfs" : ""
+          } ],
+          "classType" : null
+        }, {
+          "name" : "AuthorizationID",
+          "ifsSolMappings" : [ {
+            "ifs" : "",
+            "sol" : "StringValue",
+            "solType" : "",
+            "defaultIfs" : ""
+          } ],
+          "classType" : null
+        } ]
+      }, {
+        "name" : "CreationDateTime",
+        "ifsSolMappings" : [ {
+          "ifs" : "",
+          "sol" : "2021-04-19T11:17:04.585-07:00",
+          "solType" : "",
+          "defaultIfs" : ""
+        } ],
+        "classType" : null
+      }, {
+        "name" : "BODID",
+        "ifsSolMappings" : [ {
+          "ifs" : "",
+          "sol" : "StringValue",
+          "solType" : "",
+          "defaultIfs" : ""
+        } ],
+        "classType" : null
+      } ]
+    }, {
+      "name" : "DataArea",
+      "classType" : null,
+      "SolNodes" : [ {
+        "name" : "Process",
+        "classType" : null,
+        "SolNodes" : [ {
+          "name" : "ActionCriteria",
+          "classType" : null,
+          "SolNodes" : [ {
+            "name" : "ActionExpression",
+            "ifsSolMappings" : [ {
+              "ifs" : "",
+              "sol" : "ActionCode",
+              "solType" : "",
+              "defaultIfs" : ""
+            }, {
+              "ifs" : "",
+              "sol" : "StringValue",
+              "solType" : "",
+              "defaultIfs" : ""
+            } ],
+            "classType" : null
+          } ]
+        } ]
+      }, {
+        "name" : "SplitWIP",
+        "classType" : null,
+        "SolNodes" : [ {
+          "name" : "SplitWIPSource",
+          "classType" : null,
+          "SolNodes" : [ {
+            "name" : "ProductionOrderReference",
+            "classType" : null,
+            "SolNodes" : [ {
+              "name" : "DocumentID",
+              "ifsSolMappings" : [ {
+                "ifs" : "",
+                "sol" : "AgencyRole",
+                "solType" : "",
+                "defaultIfs" : ""
+              } ],
+              "classType" : null,
+              "SolNodes" : [ {
+                "name" : "ID",
+                "ifsSolMappings" : [ {
+                  "ifs" : "",
+                  "sol" : "schemeID",
+                  "solType" : "",
+                  "defaultIfs" : ""
+                }, {
+                  "ifs" : "",
+                  "sol" : "StringValue",
+                  "solType" : "",
+                  "defaultIfs" : ""
+                } ],
+                "classType" : null
+              } ]
+            }, {
+              "name" : "AlternateDocumentID",
+              "ifsSolMappings" : [ {
+                "ifs" : "",
+                "sol" : "AgencyRole",
+                "solType" : "",
+                "defaultIfs" : ""
+              } ],
+              "classType" : null,
+              "SolNodes" : [ {
+                "name" : "ID",
+                "ifsSolMappings" : [ {
+                  "ifs" : "",
+                  "sol" : "SchemeID",
+                  "solType" : "",
+                  "defaultIfs" : ""
+                }, {
+                  "ifs" : "",
+                  "sol" : "SchemeAgencyID",
+                  "solType" : "",
+                  "defaultIfs" : ""
+                }, {
+                  "ifs" : "",
+                  "sol" : "StringValue",
+                  "solType" : "",
+                  "defaultIfs" : ""
+                } ],
+                "classType" : null
+              } ]
+            }, {
+              "name" : "SerializedLot",
+              "classType" : null,
+              "SolNodes" : [ {
+                "name" : "Lot",
+                "classType" : null,
+                "SolNodes" : [ {
+                  "name" : "LotIDs",
+                  "classType" : null,
+                  "SolNodes" : [ {
+                    "name" : "ID",
+                    "ifsSolMappings" : [ {
+                      "ifs" : "",
+                      "sol" : "StringValue",
+                      "solType" : "",
+                      "defaultIfs" : ""
+                    } ],
+                    "classType" : null
+                  } ]
+                }, {
+                  "name" : "SerialNumber",
+                  "ifsSolMappings" : [ {
+                    "ifs" : "",
+                    "sol" : "Number",
+                    "solType" : "",
+                    "defaultIfs" : ""
+                  } ],
+                  "classType" : null
+                } ]
+              }, {
+                "name" : "Lot",
+                "classType" : null,
+                "SolNodes" : [ {
+                  "name" : "LotIDs",
+                  "classType" : null,
+                  "SolNodes" : [ {
+                    "name" : "ID",
+                    "ifsSolMappings" : [ {
+                      "ifs" : "",
+                      "sol" : "StringValue",
+                      "solType" : "",
+                      "defaultIfs" : ""
+                    } ],
+                    "classType" : null
+                  } ]
+                }, {
+                  "name" : "SerialNumber",
+                  "ifsSolMappings" : [ {
+                    "ifs" : "",
+                    "sol" : "StringValue",
+                    "solType" : "",
+                    "defaultIfs" : ""
+                  } ],
+                  "classType" : null
+                } ]
+              }, {
+                "name" : "Lot",
+                "classType" : null,
+                "SolNodes" : [ {
+                  "name" : "LotIDs",
+                  "classType" : null,
+                  "SolNodes" : [ {
+                    "name" : "ID",
+                    "ifsSolMappings" : [ {
+                      "ifs" : "",
+                      "sol" : "StringValue",
+                      "solType" : "",
+                      "defaultIfs" : ""
+                    } ],
+                    "classType" : null
+                  } ]
+                }, {
+                  "name" : "SerialNumber",
+                  "ifsSolMappings" : [ {
+                    "ifs" : "",
+                    "sol" : "StringValue",
+                    "solType" : "",
+                    "defaultIfs" : ""
+                  } ],
+                  "classType" : null
+                } ]
+              } ]
+            } ]
+          }, {
+            "name" : "OperationReference",
+            "classType" : null,
+            "SolNodes" : [ {
+              "name" : "DocumentID",
+              "classType" : null,
+              "SolNodes" : [ {
+                "name" : "ID",
+                "ifsSolMappings" : [ {
+                  "ifs" : "",
+                  "sol" : "StringValue",
+                  "solType" : "",
+                  "defaultIfs" : ""
+                } ],
+                "classType" : null
+              } ]
+            } ]
+          } ]
+        }, {
+          "name" : "SplitWIPDestination",
+          "classType" : null,
+          "SolNodes" : [ {
+            "name" : "ItemQuantity",
+            "ifsSolMappings" : [ {
+              "ifs" : "",
+              "sol" : "BigDecimalValue",
+              "solType" : "",
+              "defaultIfs" : ""
+            } ],
+            "classType" : null
+          }, {
+            "name" : "ProductionOrderReference",
+            "classType" : null,
+            "SolNodes" : [ {
+              "name" : "DocumentID",
+              "ifsSolMappings" : [ {
+                "ifs" : "",
+                "sol" : "StringValue",
+                "solType" : "",
+                "defaultIfs" : ""
+              } ],
+              "classType" : null,
+              "SolNodes" : [ {
+                "name" : "ID",
+                "ifsSolMappings" : [ {
+                  "ifs" : "",
+                  "sol" : "schemeID",
+                  "solType" : "",
+                  "defaultIfs" : ""
+                }, {
+                  "ifs" : "",
+                  "sol" : "StringValue",
+                  "solType" : "",
+                  "defaultIfs" : ""
+                } ],
+                "classType" : null
+              } ]
+            }, {
+              "name" : "AlternateDocumentID",
+              "ifsSolMappings" : [ {
+                "ifs" : "",
+                "sol" : "agencyRole",
+                "solType" : "",
+                "defaultIfs" : ""
+              } ],
+              "classType" : null,
+              "SolNodes" : [ {
+                "name" : "ID",
+                "ifsSolMappings" : [ {
+                  "ifs" : "",
+                  "sol" : "schemeID",
+                  "solType" : "",
+                  "defaultIfs" : ""
+                }, {
+                  "ifs" : "",
+                  "sol" : "schemeAgencyID",
+                  "solType" : "",
+                  "defaultIfs" : ""
+                }, {
+                  "ifs" : "",
+                  "sol" : "StringValue",
+                  "solType" : "",
+                  "defaultIfs" : ""
+                } ],
+                "classType" : null
+              } ]
+            }, {
+              "name" : "SerializedLot",
+              "classType" : null,
+              "SolNodes" : [ {
+                "name" : "Lot",
+                "classType" : null,
+                "SolNodes" : [ {
+                  "name" : "LotIDs",
+                  "classType" : null,
+                  "SolNodes" : [ {
+                    "name" : "ID",
+                    "ifsSolMappings" : [ {
+                      "ifs" : "",
+                      "sol" : "StringValue",
+                      "solType" : "",
+                      "defaultIfs" : ""
+                    } ],
+                    "classType" : null
+                  } ]
+                }, {
+                  "name" : "SerialNumber",
+                  "ifsSolMappings" : [ {
+                    "ifs" : "",
+                    "sol" : "StringValue",
+                    "solType" : "",
+                    "defaultIfs" : ""
+                  } ],
+                  "classType" : null
+                } ]
+              } ]
+            } ]
+          } ]
+        }, {
+          "name" : "SplitWIPDestination",
+          "classType" : null,
+          "SolNodes" : [ {
+            "name" : "ItemQuantity",
+            "ifsSolMappings" : [ {
+              "ifs" : "",
+              "sol" : "BigDecimalValue",
+              "solType" : "",
+              "defaultIfs" : ""
+            } ],
+            "classType" : null
+          }, {
+            "name" : "ProductionOrderReference",
+            "classType" : null,
+            "SolNodes" : [ {
+              "name" : "SerializedLot",
+              "classType" : null,
+              "SolNodes" : [ {
+                "name" : "Lot",
+                "classType" : null,
+                "SolNodes" : [ {
+                  "name" : "LotIDs",
+                  "classType" : null,
+                  "SolNodes" : [ {
+                    "name" : "ID",
+                    "ifsSolMappings" : [ {
+                      "ifs" : "",
+                      "sol" : "StringValue",
+                      "solType" : "",
+                      "defaultIfs" : ""
+                    } ],
+                    "classType" : null
+                  } ]
+                }, {
+                  "name" : "SerialNumber",
+                  "ifsSolMappings" : [ {
+                    "ifs" : "",
+                    "sol" : "StringValue",
+                    "solType" : "",
+                    "defaultIfs" : ""
+                  } ],
+                  "classType" : null
+                } ]
+              }, {
+                "name" : "Lot",
+                "classType" : null,
+                "SolNodes" : [ {
+                  "name" : "LotIDs",
+                  "classType" : null,
+                  "SolNodes" : [ {
+                    "name" : "ID",
+                    "ifsSolMappings" : [ {
+                      "ifs" : "",
+                      "sol" : "StringValue",
+                      "solType" : "",
+                      "defaultIfs" : ""
+                    } ],
+                    "classType" : null
+                  } ]
+                }, {
+                  "name" : "SerialNumber",
+                  "ifsSolMappings" : [ {
+                    "ifs" : "",
+                    "sol" : "StringValue",
+                    "solType" : "",
+                    "defaultIfs" : ""
+                  } ],
+                  "classType" : null
+                } ]
+              } ]
+            } ]
+          } ]
+        } ]
+      } ]
+    } ]
+  } ]
+}

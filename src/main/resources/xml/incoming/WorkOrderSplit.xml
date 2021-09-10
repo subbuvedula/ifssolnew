@@ -1,0 +1,96 @@
+<ProcessSplitWIP releaseID="9_4" xmlns="http://www.openapplications.org/oagis/9">
+	<ApplicationArea>
+		<Sender>
+			<LogicalID>SOLUMINA_DNKT</LogicalID>
+			<ComponentID>WID</ComponentID>
+			<TaskID>Work Order Split</TaskID>
+			<ReferenceID>29ea5939-0710-4cb3-b8ec-f114f88064d6</ReferenceID>
+			<ConfirmationCode>OnError</ConfirmationCode>
+			<AuthorizationID>SUPERUSER</AuthorizationID>
+		</Sender>
+		<CreationDateTime>2021-04-19T11:17:04.585-07:00</CreationDateTime>
+		<BODID>FB9AA0FF-7B33-4DE4-A6F5-BA9A850E47C7</BODID>
+	</ApplicationArea>
+	<DataArea>
+		<Process>
+			<ActionCriteria>
+				<ActionExpression actionCode="Change">/ProcessSplitWIP/DataArea/SplitWIP[SplitWIPSource/ProductionOrderReference/DocumentID/ID='CHANGE_TEST_MAIN_1']</ActionExpression>
+			</ActionCriteria>
+		</Process>
+		<SplitWIP>
+			<SplitWIPSource>
+				<ProductionOrderReference>
+					<DocumentID agencyRole="ERP">
+						<ID schemeID="WorkOrder">CHANGE_TEST_MAIN_1</ID>
+					</DocumentID>
+					<AlternateDocumentID agencyRole="MES">
+						<ID schemeID="WorkOrder" schemeAgencyID="Solumina">CHANGE_TEST_MAIN_1</ID>
+					</AlternateDocumentID>
+					<SerializedLot>
+						<Lot>
+							<LotIDs>
+								<ID>N/A</ID>
+							</LotIDs>
+							<SerialNumber>CHANGE_TEST_MAIN_1_3</SerialNumber>
+						</Lot>
+						<Lot>
+							<LotIDs>
+								<ID>N/A</ID>
+							</LotIDs>
+							<SerialNumber>CHANGE_TEST_MAIN_1_2</SerialNumber>
+						</Lot>
+						<Lot>
+							<LotIDs>
+								<ID>N/A</ID>
+							</LotIDs>
+							<SerialNumber>CHANGE_TEST_MAIN_1_1</SerialNumber>
+						</Lot>
+					</SerializedLot>
+				</ProductionOrderReference>
+				<OperationReference>
+					<DocumentID>
+						<ID>0010</ID>
+					</DocumentID>
+				</OperationReference>
+			</SplitWIPSource>
+			<SplitWIPDestination>
+				<ItemQuantity>1.0</ItemQuantity>
+				<ProductionOrderReference>
+					<DocumentID agencyRole="ERP">
+						<ID schemeID="WorkOrder">CHANGE_TEST_MAIN_1</ID>
+					</DocumentID>
+					<AlternateDocumentID agencyRole="MES">
+						<ID schemeID="WorkOrder" schemeAgencyID="Solumina">CHANGE_TEST_MAIN_1</ID>
+					</AlternateDocumentID>
+					<SerializedLot>
+						<Lot>
+							<LotIDs>
+								<ID>N/A</ID>
+							</LotIDs>
+							<SerialNumber>CHANGE_TEST_MAIN_1_1</SerialNumber>
+						</Lot>
+					</SerializedLot>
+				</ProductionOrderReference>
+			</SplitWIPDestination>
+			<SplitWIPDestination>
+				<ItemQuantity>2</ItemQuantity>
+				<ProductionOrderReference>
+					<SerializedLot>
+						<Lot>
+							<LotIDs>
+								<ID>N/A</ID>
+							</LotIDs>
+							<SerialNumber>CHANGE_TEST_MAIN_1_2</SerialNumber>
+						</Lot>
+						<Lot>
+							<LotIDs>
+								<ID>N/A</ID>
+							</LotIDs>
+							<SerialNumber>CHANGE_TEST_MAIN_1_3</SerialNumber>
+						</Lot>
+					</SerializedLot>
+				</ProductionOrderReference>
+			</SplitWIPDestination>
+		</SplitWIP>
+	</DataArea>
+</ProcessSplitWIP>
