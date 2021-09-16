@@ -81,8 +81,11 @@ public class DocTemplate {
     }
 
     //TODO should throw TemplateCreationException
-    public Object createInstanceUsingFactoryMethod(String name) {
+    public  static Object createInstanceUsingFactoryMethod(String name) {
         Object instance = null;
+        name = name.replace(".impl", "");
+
+        name = name.replace("Impl", "");
         try {
             Class factoryClazz = Class.forName(name + "$Factory");
             Method m = factoryClazz.getMethod("newInstance");
@@ -112,6 +115,25 @@ public class DocTemplate {
         return addMethods.get(name);
     }
 
+    public Method getAddMethodMatching(String... keywords) {
+        boolean matched = true;
+        Method matchedMethod = null;
+        for(String mName : getAddMethods().keySet()) {
+            matched = true;
+            for(String keyword : keywords) {
+                if (!mName.contains(keyword)) {
+                    matched = false;
+                    break;
+                }
+            }
+            if (matched) {
+                return getAddMethods().get(mName);
+            }
+        }
+
+        return  null;
+    }
+
     public Method getSetMethod(String name) {
         return setMethods.get(name);
     }
@@ -120,18 +142,22 @@ public class DocTemplate {
         return getMethods.get(name);
     }
 
-    public Method getGetMethodReturnType(String name) {
+    public Class getGetMethodReturnType(String name) {
 
         Method method =  getMethods.get("get" + StringUtility.makeFirstLetterCap(name));
         if (method == null) {
-            getMethods.get("addNew" + StringUtility.makeFirstLetterCap(name));
+            method = getMethods.get("addNew" + StringUtility.makeFirstLetterCap(name));
+        }
+
+        if (method != null) {
+            return method.getReturnType();
         }
 
         return null;
     }
 
     public Method getSetMethodByVarName(String name) {
-        return setMethods.get("set"+name);
+        return setMethods.get("set"+StringUtility.makeFirstLetterCap(name));
     }
 
 

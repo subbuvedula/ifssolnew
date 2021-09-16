@@ -76,12 +76,12 @@ public class SyncLocationMapper implements IMapper<SyncLocationDocument>, Functi
         LocationType parentLocationType1 = locationUserAreaType.addNewParentLocation();
         parentLocationType1.setType("pt1");
         parentLocationType1.addNewID().setStringValue("ptid1");
+        userAreaType.set(locationUserAreaType);
 
         LocationType parentLocationType2 = locationUserAreaType.addNewParentLocation();
         parentLocationType2.setType("pt2");
         parentLocationType2.addNewID().setStringValue("ptid2");
 
-        userAreaType.set(locationUserAreaType);
 
         try {
             StringWriter sw = new StringWriter();

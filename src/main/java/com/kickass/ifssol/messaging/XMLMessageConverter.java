@@ -174,6 +174,9 @@ public class XMLMessageConverter implements MessageConverter {
         if (object instanceof XmlObject) {
             XmlObject xmlObject = (XmlObject)object;
             String xmlString = xmlObject.toString();
+            xmlString = preprocess(xmlString);
+            LOGGER.info("XMLString before pubslishing : ");
+            System.out.println(xmlString);
             textMessage.setText(xmlString);
             textMessage.setJMSCorrelationID(UUID.randomUUID().toString());
             //LOGGER.info("Converted the object to xml message : " + xmlString);
@@ -190,6 +193,13 @@ public class XMLMessageConverter implements MessageConverter {
         } catch (XmlException e) {
            throw new MessageConversionException("", e);
         }
+    }
+
+    protected String preprocess(String xml) {
+        xml = xml.replace("</oag:", "</ibts:");
+        xml = xml.replace("<oag:", "<ibts:");
+        xml = xml.replace(":oag=", ":ibts=");
+        return xml;
     }
 
     @Override
@@ -210,4 +220,14 @@ public class XMLMessageConverter implements MessageConverter {
         }
         return xmlObject;
     }
+
+    /**
+    public static void main(String[] args) {
+        XMLMessageConverter x = new XMLMessageConverter();
+        String xml = "xmlns:oag=\"http://www.ibaset.com/solumina/oagis\"  <oag:ParentLocation type=\"workLocation\"></oag:ParentLocation>";
+        xml = x.preprocess(xml);
+        System.out.println(xml);
+    }
+     */
+
 }

@@ -78,10 +78,13 @@ public class SolNodeJsonGenerator {
         String nodeName = node.getNodeName();
 
         SolNodesRoot solNodesRoot = new SolNodesRoot();
-        DocTemplateMap docTemplateMap = new Reflector().process(xmlObject.getClass()).getDocTemplateMap();
+        DocTemplate docTemplate = new Reflector().process(xmlObject.getClass());
+        DocTemplateMap docTemplateMap = docTemplate.getDocTemplateMap();
+
+        Object rootInstance = docTemplate.getRootInstance();
 
         SolNode solNode = new SolNode();
-        traverse(node.getFirstChild(), solNode, null, docTemplateMap);
+        traverse(node.getFirstChild(), solNode, null, docTemplateMap, rootInstance);
 
         solNodesRoot.addSolNode(solNode);
 
@@ -94,7 +97,10 @@ public class SolNodeJsonGenerator {
 
 
 
-    private void traverse(Node node, SolNode solNode, SolNode parentNode, DocTemplateMap docTemplateMap ) {
+    private void traverse(Node node, SolNode solNode,
+                          SolNode parentNode,
+                          DocTemplateMap docTemplateMap,
+                          Object parentInstance) {
         String name = node.getNodeName();
         NamedNodeMap nameNodeMap = node.getAttributes();
         solNode.setName(name);
@@ -107,7 +113,7 @@ public class SolNodeJsonGenerator {
                 if (!attrName.equals("xmlns")) {
                     System.out.println(attrName + ":" + attrValue);
                 }
-                addSolMappings(solNode, attrName, docTemplateMap);
+                addSolMappings(solNode, attrName, docTemplateMap, parentInstance);
             }
         }
 
@@ -116,14 +122,17 @@ public class SolNodeJsonGenerator {
         }
 
         NodeList nodeList = node.getChildNodes();
+
         for(int i=0; i<nodeList.getLength(); i++) {
             Node cnode = nodeList.item(i);
+            String cnodename = cnode.getNodeName();
+
             if (cnode.getNodeType() == Node.TEXT_NODE){
                 String nodevalue = cnode.getNodeValue().trim();
                 if (nodevalue.length() == 0) {
                     continue;
                 }
-                addSolMappings(solNode, nodevalue, docTemplateMap);
+                addSolMappings(solNode, nodevalue, docTemplateMap, parentInstance);
                 String nodeName = cnode.getNodeName();
                 System.out.println(name + ":" + nodevalue);
             }
@@ -132,13 +141,13 @@ public class SolNodeJsonGenerator {
                 String tagName = element.getTagName();
 
                 SolNode csolNode = new SolNode();
-                traverse(cnode, csolNode, solNode , docTemplateMap);
+                traverse(cnode, csolNode, solNode , docTemplateMap, parentInstance);
             }
         }
     }
 
 
-    private String getType(SolNode solNode, DocTemplateMap docTemplateMap) {
+    private String getType(SolNode solNode, DocTemplateMap docTemplateMap, Object parentInstance) {
 
         SolNode parentNode = solNode.getParentNode();
         String parentName = null;
@@ -148,16 +157,20 @@ public class SolNodeJsonGenerator {
         if (parentName == null) {
             return "";
         }
+
         String clazzName = "org.openapplications.oagis.x9." + parentName + "Type";
+        //DocTemplate docTemplate = docTemplateMap.get(parentInstance.getClass());
         DocTemplate docTemplate = docTemplateMap.getByClassName(clazzName);
         if (docTemplate != null) {
+            Class returnType = docTemplate.getGetMethodReturnType(StringUtility.makeFirstLetterCap(solNode.getName()));
+            /*
             Method getMethod = docTemplate.getGetMethod("get" + StringUtility.makeFirstLetterCap(solNode.getName()));
             if (getMethod == null) {
                 return "";
             }
             Class returnType = getMethod.getReturnType();
-
-            if (XmlAnySimpleType.class.isAssignableFrom(returnType)) {
+             */
+            if (returnType != null && XmlAnySimpleType.class.isAssignableFrom(returnType)) {
                 return getSolFieldValueByType(returnType);
             }
         }
@@ -196,8 +209,10 @@ public class SolNodeJsonGenerator {
         return "<REPLACE_MANUALLY>";
     }
 
-    private void addSolMappings(SolNode solNode, String solName, DocTemplateMap docTemplateMap) {
-        String solValue = getType(solNode,docTemplateMap);
+    private void addSolMappings(SolNode solNode, String solName,
+                                DocTemplateMap docTemplateMap, Object parentInstance) {
+
+        String solValue = getType(solNode,docTemplateMap, parentInstance);
         IfsSolMapping ifsSolMapping = new IfsSolMapping();
         ifsSolMapping.setSol(solValue);
         solNode.addIfsSolMapping(ifsSolMapping);

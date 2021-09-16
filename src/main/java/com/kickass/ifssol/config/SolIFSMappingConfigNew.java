@@ -114,7 +114,7 @@ public class SolIFSMappingConfigNew {
                 solNodesRootList.add(solNodesRoot);
             }
             catch (Exception ex) {
-                LOGGER.error("Unable to load the resource " + name);
+                LOGGER.error("Unable to load the resource " + name, ex);
             }
         }
 

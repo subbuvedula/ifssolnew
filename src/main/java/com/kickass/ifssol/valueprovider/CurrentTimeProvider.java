@@ -8,7 +8,14 @@ public class CurrentTimeProvider<T,R> implements Function<Map, Calendar>{
     @Override
     public Calendar apply(Map context) {
         Calendar cal = Calendar.getInstance();
-        System.out.println("CurrentTimeProvider Called ++++++++++++++++++++ " + cal);
+        int dom = cal.get(Calendar.DAY_OF_MONTH);
+        int year = cal.get(Calendar.YEAR);
+        int mon = cal.get(Calendar.MONTH);
+
+        cal.clear();
+        cal.set(Calendar.DAY_OF_MONTH, dom);
+        cal.set(Calendar.YEAR, year);
+        cal.set(Calendar.MONTH, mon);
         return cal;
     }
 
@@ -20,5 +27,10 @@ public class CurrentTimeProvider<T,R> implements Function<Map, Calendar>{
     @Override
     public <V> Function<Map, V> andThen(Function<? super Calendar, ? extends V> after) {
         return Function.super.andThen(after);
+    }
+
+    public static void main(String[] args) {
+        CurrentTimeProvider ct = new CurrentTimeProvider();
+        ct.apply(null);
     }
 }
