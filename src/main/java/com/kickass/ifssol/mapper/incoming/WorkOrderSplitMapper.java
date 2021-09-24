@@ -2,31 +2,34 @@ package com.kickass.ifssol.mapper.incoming;
 
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.kickass.ifssol.dataaccessor.CommonDataAccessor;
 import com.kickass.ifssol.entity.SolNode;
 import com.kickass.ifssol.entity.SolNodesRoot;
+import com.kickass.ifssol.ifsproxy.IFSServerProxy;
 import com.kickass.ifssol.mapper.SolToIfsMapper;
-import com.kickass.ifssol.messaging.XMLMessageConverter;
 import com.kickass.ifssol.util.reflect.DocTemplate;
-import com.kickass.ifssol.util.reflect.DocTemplateMap;
 import com.kickass.ifssol.util.reflect.Reflector;
+import ifs.fnd.ap.PlsqlCommand;
+import ifs.fnd.ap.Record;
 import org.apache.xmlbeans.XmlObject;
 import org.openapplications.oagis.x9.ProcessSplitWIPDocument;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.core.io.support.ResourcePatternResolver;
+import org.springframework.stereotype.Component;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.StringWriter;
 
+@Component
 public class WorkOrderSplitMapper {
+
     public void map(XmlObject xmlObject) {
         ProcessSplitWIPDocument processSplitWIPDocument =
                 (ProcessSplitWIPDocument) xmlObject;
         processSplitWIPDocument.getProcessSplitWIP();
-
     }
 
     public static void main(String[] args) throws Exception {
@@ -51,8 +54,16 @@ public class WorkOrderSplitMapper {
         XmlObject xmlObject = XmlObject.Factory.parse(xmlString);
         DocTemplate dt = new Reflector().process(xmlObject.getClass(), true);
 
-        SolToIfsMapper solToIfsMapper = new SolToIfsMapper();
-        solToIfsMapper.map(xmlObject, solNodesRoot, dt.getDocTemplateMap());
+        IFSServerProxy serverProxy = new IFSServerProxy();
+        serverProxy.createServer();
+
+        CommonDataAccessor dataAccessor = new CommonDataAccessor(serverProxy);
+        PlsqlCommand command = dataAccessor.getPlSqlCommand(solNodesRoot.getUpdateStatement());
+        Record record = command.getBindVariables();
+
+        SolToIfsMapper solToIfsMapper = new SolToIfsMapper(dataAccessor);
+        solToIfsMapper.map(xmlObject, solNodesRoot, dt.getDocTemplateMap(), record);
+        dataAccessor.execute(command);
 
         /*
 

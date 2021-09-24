@@ -24,6 +24,8 @@ import java.util.Collection;
 public class JmsConfig implements JmsListenerConfigurer {
     private static Logger LOGGER = LogManager.getLogger(JmsConfig.class);
 
+    @Autowired
+    private SoluminaMessageListener soluminaMessageListener;
 
     @Autowired
     private Environment environment;
@@ -68,9 +70,9 @@ public class JmsConfig implements JmsListenerConfigurer {
         Collection<SolNodesRoot> solNodesRootList = solIFSMappingConfig.getIncomingSolNodesRootList();
         boolean hasAtleatOneMesssageListener = false;
         for(SolNodesRoot solNodesRoot : solNodesRootList) {
-            if (!StringUtils.isEmpty(solNodesRoot.getReceiveQueue())) {
+            if (solNodesRoot.isEnabled() && !StringUtils.isEmpty(solNodesRoot.getReceiveQueue())) {
                 endpoint.setDestination(solNodesRoot.getReceiveQueue());
-                endpoint.setMessageListener(new SoluminaMessageListener());
+                endpoint.setMessageListener(soluminaMessageListener);
                 hasAtleatOneMesssageListener = true;
             }
         }

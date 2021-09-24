@@ -171,6 +171,7 @@ public class XMLMessageConverter implements MessageConverter {
     @Override
     public Message toMessage(Object object, Session session) throws JMSException, MessageConversionException {
         TextMessage textMessage = session.createTextMessage();
+
         if (object instanceof XmlObject) {
             XmlObject xmlObject = (XmlObject)object;
             String xmlString = xmlObject.toString();
@@ -178,12 +179,13 @@ public class XMLMessageConverter implements MessageConverter {
             LOGGER.info("XMLString before pubslishing : ");
             System.out.println(xmlString);
             textMessage.setText(xmlString);
-            textMessage.setJMSCorrelationID(UUID.randomUUID().toString());
             //LOGGER.info("Converted the object to xml message : " + xmlString);
-            return textMessage;
+        }
+        else if (object instanceof String) {
+            textMessage.setText((String)object);
         }
 
-        textMessage.setText("Test string");
+        textMessage.setJMSCorrelationID(UUID.randomUUID().toString());
         return textMessage;
     }
 

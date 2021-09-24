@@ -42,6 +42,8 @@ public class SolIFSMappingConfigNew {
 
     private List<SolNodesRoot> outgoingSolNodesRootList = new ArrayList<>();
     private List<SolNodesRoot> incomingSolNodesRootList = new ArrayList<>();
+    private Map<String,SolNodesRoot> incomingSolNodesRootsByQueueNameMap = new HashMap<>();
+
 
     private ThreadPoolTaskScheduler threadPoolTaskScheduler = new ThreadPoolTaskScheduler();
 
@@ -61,24 +63,7 @@ public class SolIFSMappingConfigNew {
     void setup() {
         try {
             configureThreadPoolTaskScheduler();
-            String incomingFolderName = System.getProperty("incoming.mappings.folder");
-            String outgoingFolderName = System.getProperty("outgoing.mappings.folder");
-
-            if (StringUtils.isEmpty(incomingFolderName)) {
-                incomingFolderName = env.getProperty("incoming.mappings.folder");
-            }
-            if (StringUtils.isEmpty(outgoingFolderName)) {
-                outgoingFolderName = env.getProperty("outgoing.mappings.folder");
-            }
-
-            if (StringUtils.isEmpty(incomingFolderName)) {
-                LOGGER.warn("No incoming.mappings.folder specified, use -Dincoming.mappings.folder option to speficy the location of incoming mapping jsons");
-            }
-            if (StringUtils.isEmpty(outgoingFolderName)) {
-                LOGGER.warn("No outgoing.mappings.folder specified, use -Doutgoing.mappings.folder option to speficy the location of incoming mapping jsons");
-            }
-
-            loadMappings(outgoingFolderName, outgoingSolNodesRootList);
+            loadMappings();
             schedule();
         } catch (IOException ex) {
             throw new RuntimeException("Unable to load the transaction.properties", ex);
@@ -89,6 +74,37 @@ public class SolIFSMappingConfigNew {
         threadPoolTaskScheduler.setPoolSize(5);
         threadPoolTaskScheduler.setThreadNamePrefix("ThreadPoolTaskScheduler");
         threadPoolTaskScheduler.initialize();
+    }
+
+    void loadMappings() throws  IOException {
+        String incomingFolderName = System.getProperty("incoming.mappings.folder");
+        String outgoingFolderName = System.getProperty("outgoing.mappings.folder");
+
+        if (StringUtils.isEmpty(incomingFolderName)) {
+            incomingFolderName = env.getProperty("incoming.mappings.folder");
+        }
+        if (StringUtils.isEmpty(outgoingFolderName)) {
+            outgoingFolderName = env.getProperty("outgoing.mappings.folder");
+        }
+
+        if (StringUtils.isEmpty(incomingFolderName)) {
+            LOGGER.warn("No incoming.mappings.folder specified, use -Dincoming.mappings.folder option to speficy the location of incoming mapping jsons");
+        }
+        if (StringUtils.isEmpty(outgoingFolderName)) {
+            LOGGER.warn("No outgoing.mappings.folder specified, use -Doutgoing.mappings.folder option to speficy the location of incoming mapping jsons");
+        }
+
+        loadMappings(outgoingFolderName, outgoingSolNodesRootList);
+
+        loadMappings(incomingFolderName, incomingSolNodesRootList);
+
+        for(SolNodesRoot incoming : incomingSolNodesRootList) {
+            incomingSolNodesRootsByQueueNameMap.put(incoming.getReceiveQueue(), incoming);
+        }
+    }
+
+    public SolNodesRoot getByQueueName(String queueName) {
+       return incomingSolNodesRootsByQueueNameMap.get(queueName);
     }
 
     public List<SolNodesRoot> getOutgoingSolNodesRootList() {

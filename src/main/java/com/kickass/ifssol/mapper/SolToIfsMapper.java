@@ -1,24 +1,26 @@
 package com.kickass.ifssol.mapper;
 
+import com.kickass.ifssol.dataaccessor.CommonDataAccessor;
 import com.kickass.ifssol.entity.IfsSolMapping;
 import com.kickass.ifssol.entity.SolNode;
 import com.kickass.ifssol.entity.SolNodesRoot;
 import com.kickass.ifssol.util.reflect.DocTemplate;
 import com.kickass.ifssol.util.reflect.DocTemplateMap;
+import ifs.fnd.ap.BindVariableDirection;
 import ifs.fnd.ap.Record;
+import ifs.fnd.ap.RecordAttribute;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
-import org.apache.xmlbeans.XmlObject;
 import org.openapplications.oagis.x9.ProcessType;
 import org.springframework.beans.MethodInvocationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.lang.reflect.Array;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.Collection;
+import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -30,17 +32,28 @@ public class SolToIfsMapper {
     @Autowired
     private TypeConverter typeConverter;
 
-    public Record map(Object parentInstance,
+    private CommonDataAccessor commonDataAccessor;
+
+    @Autowired
+    public SolToIfsMapper(CommonDataAccessor commonDataAccessor) {
+        this.commonDataAccessor = commonDataAccessor;
+    }
+
+    public void map(Object parentInstance,
                       SolNodesRoot solNodesRoot,
-                      DocTemplateMap docTemplateMap) throws MappingException {
+                      DocTemplateMap docTemplateMap,
+                    Record record) throws MappingException {
+
         List<SolNode> solNodes = solNodesRoot.getSolNodes();
-        Record record = new Record();
-        applyMapping(parentInstance, solNodes, record, docTemplateMap);
-        return null;
+        solNodesRoot.getUpdateStatement();
+        //Record record = new Record();
+        applyMapping(parentInstance, solNodes, record, docTemplateMap,solNodesRoot);
+        System.out.println("Record : " + record);
+        //return null;
     }
 
     private void applyMapping(Object parentInstance, List<SolNode> solNodes , Record record,
-                              DocTemplateMap docTemplateMap) throws MappingException  {
+                              DocTemplateMap docTemplateMap, SolNodesRoot solNodesRoot) throws MappingException  {
         if (parentInstance == null) {
             return;
         }
@@ -50,6 +63,46 @@ public class SolToIfsMapper {
             return;
         }
         for(SolNode solNode : solNodes) {
+            solNode.setSolNodesRoot(solNodesRoot);
+            Method getGetMethod = getGetMethod(parentDocTemplate, solNode);
+
+            List list=null;
+            try {
+                list =  getInstance(getGetMethod, parentInstance, instanceCounterMap);
+                //currentInstance = getGetMethod.invoke(parentInstance);
+
+
+                List<IfsSolMapping> ifsSolMappings = solNode.getIfsSolMappings();
+                for(Object currentInstance : list) {
+                    if (ifsSolMappings != null) {
+                        for (IfsSolMapping ifsSolMapping : ifsSolMappings) {
+                            ifsSolMapping.setSolNode(solNode);
+                            setValueOnRecord(record, ifsSolMapping, currentInstance, docTemplateMap);
+                            //get it from current instance
+                            //add it to the record.
+                        }
+                    }
+                    applyMapping(currentInstance, solNode.getSolNodes(), record, docTemplateMap, solNodesRoot);
+                }
+            }
+            catch (Exception ex) {
+                LOGGER.error("mapping failed for " + solNode.getName(), ex);
+            }
+        }
+    }
+
+    private void applyMappingOld(Object parentInstance, List<SolNode> solNodes , Record record,
+                              DocTemplateMap docTemplateMap, SolNodesRoot solNodesRoot) throws MappingException  {
+        if (parentInstance == null) {
+            return;
+        }
+        DocTemplate parentDocTemplate = docTemplateMap.get(parentInstance.getClass());
+        Map<Class,Integer> instanceCounterMap = new HashMap<Class,Integer>();
+        if (solNodes == null) {
+            return;
+        }
+        for(SolNode solNode : solNodes) {
+            solNode.setSolNodesRoot(solNodesRoot);
             Method getGetMethod = getGetMethod(parentDocTemplate, solNode);
 
             Object currentInstance=null;
@@ -57,15 +110,18 @@ public class SolToIfsMapper {
                 currentInstance =  getInstance(getGetMethod, parentInstance, instanceCounterMap);
                 //currentInstance = getGetMethod.invoke(parentInstance);
 
+
                 List<IfsSolMapping> ifsSolMappings = solNode.getIfsSolMappings();
+
                 if (ifsSolMappings != null) {
                     for (IfsSolMapping ifsSolMapping : ifsSolMappings) {
+                        ifsSolMapping.setSolNode(solNode);
                         setValueOnRecord(record, ifsSolMapping, currentInstance, docTemplateMap);
                         //get it from current instance
                         //add it to the record.
                     }
                 }
-                applyMapping(currentInstance, solNode.getSolNodes(), record, docTemplateMap);
+                applyMapping(currentInstance, solNode.getSolNodes(), record, docTemplateMap, solNodesRoot);
             }
             catch (Exception ex) {
                 LOGGER.error("mapping failed for " + solNode.getName(), ex);
@@ -86,7 +142,34 @@ public class SolToIfsMapper {
         }
         return null;
     }
-    private Object getInstance(Method getMethod, Object parentInstance, Map<Class,Integer> instanceCounterMap) {
+
+    private List getInstance(Method getMethod, Object parentInstance, Map<Class,Integer> instanceCounterMap) {
+        List list = new ArrayList();
+        try {
+
+            if (parentInstance instanceof ProcessType) {
+                String s = "";
+            }
+            String getMethodName = getMethod.getName(); //getActionCriteriaList
+            Class returnType = getMethod.getReturnType();
+
+            Object returningInstance = getMethod.invoke(parentInstance);
+            if (returningInstance instanceof  List) {
+                list = (List) returningInstance;
+            }
+            else {
+                list.add(returningInstance);
+            }
+        }
+        catch (Exception ex) {
+            LOGGER.error("Could not invoke the method " + getMethod.getName() + " On " + parentInstance.getClass().getName(), ex);
+        }
+
+        return list;
+    }
+
+
+    private Object getInstanceOld(Method getMethod, Object parentInstance, Map<Class,Integer> instanceCounterMap) {
         try {
             if (parentInstance instanceof ProcessType) {
                 String s = "";
@@ -152,8 +235,12 @@ public class SolToIfsMapper {
     private void setValueOnRecord(Record record, IfsSolMapping ifsSolMapping,
                                   Object currentInstance,
                                   DocTemplateMap docTemplateMap) {
+
+        SolNodesRoot.FieldMegeStrategy fieldMegeStrategy = ifsSolMapping.getFieldMergeStrategyEnum();
+
         String ifs = ifsSolMapping.getIfs();
         String sol = ifsSolMapping.getSol();
+        String directionStr = ifsSolMapping.getDirection();
         if (currentInstance == null) {
             System.out.println("Instance is null ");
             return;
@@ -166,6 +253,7 @@ public class SolToIfsMapper {
                 try {
                     value = getMethod.invoke(currentInstance);
                     System.out.println("Here:" + currentInstance.getClass().getName() + "." + sol + " : " + value);
+                    addValueToRecord( ifs,  value, directionStr, record, fieldMegeStrategy);
                 }
                 catch(MethodInvocationException | InvocationTargetException | IllegalAccessException ie) {
                     LOGGER.error(getMethod.getName() + " Failed on " + docTemplate.getClazz().getName());
@@ -180,4 +268,55 @@ public class SolToIfsMapper {
         }
 
     }
+
+    private BindVariableDirection getBindVariableDirection(String directionStr) {
+        if (BindVariableDirection.IN.toString().equalsIgnoreCase(directionStr)) {
+            return BindVariableDirection.IN;
+        }
+        if (BindVariableDirection.OUT.toString().equalsIgnoreCase(directionStr)) {
+            return BindVariableDirection.OUT;
+        }
+        if (BindVariableDirection.IN_OUT.toString().equalsIgnoreCase(directionStr)) {
+            return BindVariableDirection.IN_OUT;
+        }
+        return  null;
+    }
+
+    private void addValueToRecord(String ifsName,
+                                  Object value,
+                                  String directionStr,
+                                  Record record,
+                                  SolNodesRoot.FieldMegeStrategy fieldMegeStrategy) {
+
+        if (value instanceof String) {
+            Object existingValue = record.findValue(ifsName);
+
+            if (existingValue !=null) {
+                if (fieldMegeStrategy == SolNodesRoot.FieldMegeStrategy.APPEND) {
+                    RecordAttribute recordAttribute = record.add(ifsName, existingValue.toString() + "," + value.toString());
+                    BindVariableDirection bindVariableDirection = getBindVariableDirection(directionStr);
+                    if (bindVariableDirection != null) {
+                      recordAttribute.setBindVariableDirection(bindVariableDirection);
+                    }
+                }
+            }
+            else  {
+                record.add(ifsName, value.toString());
+            }
+        }
+        else if (value instanceof BigDecimal) {
+            record.add(ifsName, (BigDecimal) value);
+        }
+        else if (value instanceof Boolean) {
+            record.add(ifsName, (Boolean) value);
+        }
+        else if (value instanceof Long) {
+            record.add(ifsName, (Long) value);
+        }
+        else if (value instanceof Double) {
+            record.add(ifsName, (Double) value);
+        }
+
+    }
+
 }

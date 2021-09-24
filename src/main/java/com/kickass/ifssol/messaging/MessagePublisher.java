@@ -26,6 +26,8 @@ public class MessagePublisher {
         jmsTemplate.convertAndSend(destination, xmlObject);
     }
 
-
+    public void publish(String destination, String xml) {
+        jmsTemplate.convertAndSend(destination, xml);
+    }
 
 }

@@ -84,6 +84,7 @@ public class SolNodeJsonGenerator {
         Object rootInstance = docTemplate.getRootInstance();
 
         SolNode solNode = new SolNode();
+        solNode.setSolNodesRoot(solNodesRoot);
         traverse(node.getFirstChild(), solNode, null, docTemplateMap, rootInstance);
 
         solNodesRoot.addSolNode(solNode);
@@ -104,6 +105,7 @@ public class SolNodeJsonGenerator {
         String name = node.getNodeName();
         NamedNodeMap nameNodeMap = node.getAttributes();
         solNode.setName(name);
+        solNode.setSolNodesRoot(parentNode.getSolNodesRoot());
 
         for(int i=0; i<nameNodeMap.getLength(); i++) {
             Node attribute = nameNodeMap.item(i);

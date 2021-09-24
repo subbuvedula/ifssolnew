@@ -2,9 +2,16 @@ package com.kickass.ifssol.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.kickass.ifssol.mapper.incoming.WorkOrderSplitMapper;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
+import org.springframework.core.io.support.ResourcePatternResolver;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
@@ -22,6 +29,9 @@ public class SolNodesRoot {
     private String receiveQueue;
     private String mapperFunctionName;
     private boolean enabled;
+    private String updateStoredproc;
+
+    private String fieldMergeStrategy = FieldMegeStrategy.APPEND.name();
 
     @JsonIgnore
     private Function mapperFunction;
@@ -121,6 +131,9 @@ public class SolNodesRoot {
     }
 
     public String getUpdateStatement() {
+        if (StringUtils.isEmpty(updateStatement) && updateStoredproc != null) {
+            updateStatement = loadStoredProc();
+        }
         return updateStatement;
     }
 
@@ -140,4 +153,52 @@ public class SolNodesRoot {
         solNodes.add(solNode);
     }
 
+    public String getFieldMergeStrategy() {
+        return fieldMergeStrategy;
+    }
+
+    public void setFieldMergeStrategy(String fieldMergeStrategy) {
+        if (!StringUtils.isEmpty(fieldMergeStrategy)) {
+            try {
+                FieldMegeStrategy fms = FieldMegeStrategy.valueOf(fieldMergeStrategy.toUpperCase());
+            } catch (IllegalArgumentException ex) {
+                throw new RuntimeException("Invalid Merge Strategy " + fieldMergeStrategy, ex);
+            }
+            this.fieldMergeStrategy = fieldMergeStrategy;
+        }
+        else {
+            this.fieldMergeStrategy = FieldMegeStrategy.APPEND.name();
+        }
+    }
+
+    public FieldMegeStrategy getFieldMergeStrategyEnum() {
+        return SolNodesRoot.FieldMegeStrategy.valueOf(fieldMergeStrategy.toUpperCase());
+    }
+
+    public String getUpdateStoredproc() {
+        return updateStoredproc;
+    }
+
+    public void setUpdateStoredproc(String updateStoredproc) {
+        this.updateStoredproc = updateStoredproc;
+    }
+
+    private String loadStoredProc() {
+        String sql = "";
+        ClassLoader cl = SolNodesRoot.class.getClassLoader();
+        ResourcePatternResolver resolver = new PathMatchingResourcePatternResolver(cl);
+        try {
+            InputStream is = SolNodesRoot.class.getResourceAsStream("/storedprocs/"+updateStoredproc);
+            byte[] bytes = new byte[is.available()];
+            is.read(bytes);
+            sql = new String(bytes);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return sql;
+    }
+
+    public enum FieldMegeStrategy {
+        APPEND, OVERRIDE, CUSTOM
+    }
 }

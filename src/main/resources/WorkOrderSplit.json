@@ -8,8 +8,10 @@
   "enabled" : false,
   "cronExpression" : null,
   "query" : null,
-  "updateStatement" : null,
+  "updateStatement" : "",
+  "updateStoredproc" : "Update_Work_Order_Split.sql",
   "updateStatus" : false,
+  "fieldMergeStrategy" : "Append",
   "SolNodes" : [ {
     "name" : "ProcessSplitWIP",
     "ifsSolMappings" : [ {
@@ -150,10 +152,11 @@
               "SolNodes" : [ {
                 "name" : "ID",
                 "ifsSolMappings" : [ {
-                  "ifs" : "",
-                  "sol" : "schemeID",
+                  "ifs" : "WO_NO",
+                  "sol" : "StringValue",
                   "solType" : "",
-                  "defaultIfs" : ""
+                  "defaultIfs" : "",
+                  "direction" : "in"
                 }, {
                   "ifs" : "",
                   "sol" : "StringValue",
@@ -213,7 +216,7 @@
                 }, {
                   "name" : "SerialNumber",
                   "ifsSolMappings" : [ {
-                    "ifs" : "",
+                    "ifs" : "SNO",
                     "sol" : "Number",
                     "solType" : "",
                     "defaultIfs" : ""
@@ -239,7 +242,7 @@
                 }, {
                   "name" : "SerialNumber",
                   "ifsSolMappings" : [ {
-                    "ifs" : "",
+                    "ifs" : "SNO",
                     "sol" : "StringValue",
                     "solType" : "",
                     "defaultIfs" : ""
@@ -265,7 +268,7 @@
                 }, {
                   "name" : "SerialNumber",
                   "ifsSolMappings" : [ {
-                    "ifs" : "",
+                    "ifs" : "SNO",
                     "sol" : "StringValue",
                     "solType" : "",
                     "defaultIfs" : ""
@@ -298,10 +301,11 @@
           "SolNodes" : [ {
             "name" : "ItemQuantity",
             "ifsSolMappings" : [ {
-              "ifs" : "",
+              "ifs" : "SPLIT_QTY",
               "sol" : "BigDecimalValue",
               "solType" : "",
-              "defaultIfs" : ""
+              "defaultIfs" : "",
+              "direction" : "in"
             } ],
             "classType" : null
           }, {
@@ -324,10 +328,11 @@
                   "solType" : "",
                   "defaultIfs" : ""
                 }, {
-                  "ifs" : "",
+                  "ifs" : "NEW_WO_NO",
                   "sol" : "StringValue",
                   "solType" : "",
-                  "defaultIfs" : ""
+                  "defaultIfs" : "",
+                  "direction" : "out"
                 } ],
                 "classType" : null
               } ]
@@ -398,7 +403,7 @@
           "SolNodes" : [ {
             "name" : "ItemQuantity",
             "ifsSolMappings" : [ {
-              "ifs" : "",
+              "ifs" : "SPLIT_QTY",
               "sol" : "BigDecimalValue",
               "solType" : "",
               "defaultIfs" : ""

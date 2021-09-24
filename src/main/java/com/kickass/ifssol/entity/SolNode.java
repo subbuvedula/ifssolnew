@@ -16,6 +16,9 @@ public class SolNode {
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private List<IfsSolMapping> ifsSolMappings = new ArrayList<>();
 
+    @JsonIgnore
+    private SolNodesRoot solNodesRoot;
+
     @JsonProperty("SolNodes")
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private List<SolNode> solNodes; // = new ArrayList<>();
@@ -75,8 +78,17 @@ public class SolNode {
         return parentNode.getRoot();
     }
 
+    public SolNodesRoot getSolNodesRoot() {
+        return solNodesRoot;
+    }
+
+    public void setSolNodesRoot(SolNodesRoot solNodesRoot) {
+        this.solNodesRoot = solNodesRoot;
+    }
+
     public void addIfsSolMapping(IfsSolMapping ifsSolMapping) {
         ifsSolMappings.add(ifsSolMapping);
+        ifsSolMapping.setSolNode(this);
     }
 
 }

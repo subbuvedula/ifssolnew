@@ -18,8 +18,13 @@ public class Reflector {
 
     private DocTemplateMap docTemplateMap = new DocTemplateMap();
 
+    //public boolean visited(Class clazz) {
+    //    return docTemplateMap.containsKey(clazz.getSimpleName());
+    //}
+
     public boolean visited(Class clazz) {
-        return docTemplateMap.containsKey(clazz.getSimpleName());
+        DocTemplate docTemplate =  docTemplateMap.get(clazz);
+        return (docTemplate != null) ;
     }
 
     public Reflector() {
@@ -55,14 +60,20 @@ public class Reflector {
                 return null;
             }
 
-            if (visited(clazz)) {
+            DocTemplate docTemplate =  docTemplateMap.get(clazz);
+            if (docTemplate != null) {
                 LOGGER.info("Already visited : " + clazz.getSimpleName());
-                return null;
+                return  docTemplate;
             }
+
+            //if (visited(clazz)) {
+            //    LOGGER.info("Already visited : " + clazz.getSimpleName());
+            //    return null;
+            //}
 
             LOGGER.info("Visiting : " + clazz.getSimpleName());
 
-            DocTemplate docTemplate = new DocTemplate(clazz, this, root, docTemplateMap);
+            docTemplate = new DocTemplate(clazz, this, root, docTemplateMap);
             //docTemplateMap.put(clazz, docTemplate);
             classMap.put(clazz.getSimpleName(), clazz);
             Method[] methods = clazz.getMethods();

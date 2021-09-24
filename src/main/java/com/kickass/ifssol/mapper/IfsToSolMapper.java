@@ -132,6 +132,7 @@ public class IfsToSolMapper {
             String solFieldName = ifsSolMapping.getSol();
             String ifsFieldName = ifsSolMapping.getIfs();
             String defaultIfs = ifsSolMapping.getDefaultIfs();
+
             String valueProviderClassName = ifsSolMapping.getValueProviderClass();
             try {
                 DocTemplate docTemplate = docTemplateMap.get(currentInstance.getClass());

@@ -17,6 +17,7 @@ public class IFSServerProxy implements IIFSServerProxy {
     private static final String DEFAULT_USERNAME = "SOLINT";
     private static final String DEFAULT_PASSWORD = "interface";
     private static final String DEFAULT_DEBUG_MODE = "true";
+    private static final String DEFAULT_SCHEMA = "IFSAPP";
 
     private Server  server;
     private String  host = "";
@@ -31,12 +32,14 @@ public class IFSServerProxy implements IIFSServerProxy {
 
     @PostConstruct
     public void createServer() throws  IFSServerException{
-        LOGGER.info("ifs.host : " + env.getProperty("ifs.host"));
+        if (env != null) {
+            LOGGER.info("ifs.host : " + env.getProperty("ifs.host"));
+        }
 
         this.host = getProperty("ifs.host", DEFAULT_HOST);
         this.username = getProperty("ifs.username", DEFAULT_USERNAME);
         this.password = getProperty("ifs.password", DEFAULT_PASSWORD);
-        this.schema = getProperty("ifs.database.schema");
+        this.schema = getProperty("ifs.database.schema", DEFAULT_SCHEMA);
 
         String debugModeStr = getProperty("ifs.debugmode", DEFAULT_DEBUG_MODE);
         if ("true".equalsIgnoreCase(debugModeStr)) {
@@ -57,6 +60,9 @@ public class IFSServerProxy implements IIFSServerProxy {
         return getProperty(key, "");
     }
         private String getProperty(String key, String defaultValue) {
+        if (env == null) {
+            return defaultValue;
+        }
         String val = env.getProperty(key);
         if (val == null) {
             return defaultValue;

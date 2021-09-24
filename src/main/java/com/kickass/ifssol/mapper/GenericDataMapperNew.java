@@ -27,11 +27,10 @@ public class GenericDataMapperNew {
         return ifsToSolMapper.map(record, solNodesRoot, docTemplateMap);
     }
 
-    public Record mapToIFS(Object parentInstance,
+    public void mapToIFS(Object parentInstance,
                            SolNodesRoot solNodesRoot,
-                           DocTemplateMap docTemplateMap)
+                           DocTemplateMap docTemplateMap, Record record)
             throws MappingException  {
-        return solToIfsMapper.map(parentInstance, solNodesRoot, docTemplateMap);
+        solToIfsMapper.map(parentInstance, solNodesRoot, docTemplateMap, record);
     }
-
 }
