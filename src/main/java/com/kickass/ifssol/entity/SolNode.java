@@ -10,6 +10,8 @@ import java.util.List;
 public class SolNode {
     private String name;
 
+    private boolean multiple;
+
     @JsonIgnore
     private SolNode parentNode;
 
@@ -76,6 +78,14 @@ public class SolNode {
             return this;
         }
         return parentNode.getRoot();
+    }
+
+    public boolean isMultiple() {
+        return multiple;
+    }
+
+    public void setMultiple(boolean multiple) {
+        this.multiple = multiple;
     }
 
     public SolNodesRoot getSolNodesRoot() {

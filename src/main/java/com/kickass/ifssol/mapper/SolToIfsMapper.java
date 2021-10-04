@@ -65,12 +65,13 @@ public class SolToIfsMapper {
         for(SolNode solNode : solNodes) {
             solNode.setSolNodesRoot(solNodesRoot);
             Method getGetMethod = getGetMethod(parentDocTemplate, solNode);
-
+            if  (solNode.isMultiple()) {
+                System.out.println("Multiple true");
+            }
             List list=null;
             try {
                 list =  getInstance(getGetMethod, parentInstance, instanceCounterMap);
                 //currentInstance = getGetMethod.invoke(parentInstance);
-
 
                 List<IfsSolMapping> ifsSolMappings = solNode.getIfsSolMappings();
                 for(Object currentInstance : list) {
@@ -287,17 +288,18 @@ public class SolToIfsMapper {
                                   String directionStr,
                                   Record record,
                                   SolNodesRoot.FieldMegeStrategy fieldMegeStrategy) {
+        BindVariableDirection bindVariableDirection = getBindVariableDirection(directionStr);
+        if (bindVariableDirection == null) {
+            return;
+        }
 
-        if (value instanceof String) {
+            if (value instanceof String) {
             Object existingValue = record.findValue(ifsName);
 
             if (existingValue !=null) {
                 if (fieldMegeStrategy == SolNodesRoot.FieldMegeStrategy.APPEND) {
-                    RecordAttribute recordAttribute = record.add(ifsName, existingValue.toString() + "," + value.toString());
-                    BindVariableDirection bindVariableDirection = getBindVariableDirection(directionStr);
-                    if (bindVariableDirection != null) {
-                      recordAttribute.setBindVariableDirection(bindVariableDirection);
-                    }
+                        RecordAttribute recordAttribute = record.add(ifsName, existingValue.toString() + "," + value.toString());
+                        recordAttribute.setBindVariableDirection(bindVariableDirection);
                 }
             }
             else  {

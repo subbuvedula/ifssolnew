@@ -12,7 +12,7 @@ public class IfsSolMapping {
     private String sol = "";
     private String solType = "";
     private String defaultIfs = "";
-    private String direction = "IN";
+    private String direction = "";
 
     private static final Set<String> VALID_DIRECTION_VALUES = new HashSet<>();
 
