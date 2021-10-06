@@ -1,7 +1,7 @@
 package com.kickass.ifssol;
 
 
-import com.kickass.ifssol.mapper.SyncLocationMapper;
+import com.kickass.ifssol.mapper.response.SyncLocationResponseMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -23,7 +23,7 @@ public class ApplicationMain {
 	private  final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(ApplicationMain.class);
 
 	@Autowired
-	private SyncLocationMapper syncLocationMapper;
+	private SyncLocationResponseMapper syncLocationMapper;
 
 	@PostConstruct
 	private void init() {

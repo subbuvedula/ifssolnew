@@ -2,10 +2,8 @@ package com.kickass.ifssol.service;
 
 import com.kickass.ifssol.dataaccessor.CommonDataAccessor;
 import com.kickass.ifssol.entity.TxnMapping;
-import com.kickass.ifssol.mapper.GenericDataMapper;
-import com.kickass.ifssol.mapper.MappingException;
+import com.kickass.ifssol.mapper.GenericDataResponseMapper;
 import com.kickass.ifssol.messaging.MessagePublisher;
-import com.kickass.ifssol.util.reflect.DocTemplate;
 import com.kickass.ifssol.util.reflect.DocTemplateMap;
 import com.kickass.ifssol.util.reflect.XStreamUtil;
 import ifs.fnd.ap.APException;
@@ -16,7 +14,7 @@ import org.apache.log4j.Logger;
 import org.apache.xmlbeans.XmlObject;
 
 import java.util.function.Function;
-
+@Deprecated
 public class CronJob implements Runnable {
     private static Logger LOGGER = LogManager.getLogger(CronJob.class);
     public static final String LOG_ID = "CF$_LOG_ID";
@@ -27,13 +25,13 @@ public class CronJob implements Runnable {
     private CommonDataAccessor commonDataAccessor;
     private MessagePublisher messagePublisher;
     private DocTemplateMap docTemplateMap;
-    private GenericDataMapper genericDataMapper;
+    private GenericDataResponseMapper genericDataMapper;
 
     public CronJob(CommonDataAccessor commonDataAccessor,
                    MessagePublisher messagePublisher,
                    TxnMapping txnMapping,
                    DocTemplateMap docTemplateMap,
-                   GenericDataMapper genericDataMapper) {
+                   GenericDataResponseMapper genericDataMapper) {
         this.commonDataAccessor = commonDataAccessor;
         this.messagePublisher = messagePublisher;
         this.txnMapping = txnMapping;

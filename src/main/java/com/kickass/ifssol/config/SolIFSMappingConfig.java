@@ -4,10 +4,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kickass.ifssol.dataaccessor.CommonDataAccessor;
 import com.kickass.ifssol.entity.TxnMapping;
 import com.kickass.ifssol.entity.TxnMappingRoot;
-import com.kickass.ifssol.mapper.GenericDataMapper;
+import com.kickass.ifssol.mapper.GenericDataResponseMapper;
 import com.kickass.ifssol.messaging.MessagePublisher;
 import com.kickass.ifssol.service.CronJob;
-import com.kickass.ifssol.util.reflect.DocTemplate;
 import com.kickass.ifssol.util.reflect.DocTemplateMap;
 import com.kickass.ifssol.util.reflect.Reflector;
 import org.apache.commons.lang3.StringUtils;
@@ -24,7 +23,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
 
-@Component
+//@Component
+@Deprecated
 public class SolIFSMappingConfig {
     private static Logger LOGGER = LogManager.getLogger(SolIFSMappingConfig.class);
 
@@ -36,7 +36,7 @@ public class SolIFSMappingConfig {
     private ThreadPoolTaskScheduler threadPoolTaskScheduler = new ThreadPoolTaskScheduler();
 
     @Autowired
-    private GenericDataMapper genericDataMapper;
+    private GenericDataResponseMapper genericDataMapper;
 
     @Autowired
     private CommonDataAccessor commonDataAccessor;

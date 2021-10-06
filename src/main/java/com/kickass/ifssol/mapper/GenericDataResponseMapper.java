@@ -9,29 +9,23 @@ import ifs.fnd.ap.Record;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.apache.xmlbeans.XmlObject;
-import org.openapplications.oagis.x9.SyncLocationDocument;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.Collection;
 import java.util.List;
 
 @Component
-public class GenericDataMapper implements IMapper<XmlObject> {
+public class GenericDataResponseMapper implements IResponseMapper {
 
     @Autowired
     private Reflector reflector;
 
-    private static Logger LOGGER = LogManager.getLogger(GenericDataMapper.class);
+    private static Logger LOGGER = LogManager.getLogger(GenericDataResponseMapper.class);
 
-    @Override
-    public XmlObject map(Record record) throws MappingException {
-        return null;
-    }
 
-    @Override
+   // @Override
     public XmlObject map(Record record, TxnMapping txnMapping, DocTemplateMap docTemplateMap) throws MappingException {
         Object rootInstance = docTemplateMap.getRootDocTemplate().getRootInstance();
         List<IfsSolMapping> mappings = txnMapping.getIfsSolMappings();

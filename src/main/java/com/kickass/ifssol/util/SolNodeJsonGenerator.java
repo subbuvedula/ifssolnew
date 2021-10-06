@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kickass.ifssol.entity.IfsSolMapping;
 import com.kickass.ifssol.entity.SolNode;
 import com.kickass.ifssol.entity.SolNodesRoot;
-import com.kickass.ifssol.mapper.incoming.WorkOrderSplitMapper;
+import com.kickass.ifssol.mapper.request.WorkOrderSplitRequestMapper;
 import com.kickass.ifssol.util.reflect.DocTemplate;
 import com.kickass.ifssol.util.reflect.DocTemplateMap;
 import com.kickass.ifssol.util.reflect.Reflector;
@@ -22,7 +22,6 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import java.io.*;
-import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -36,7 +35,7 @@ public class SolNodeJsonGenerator {
 
 
     public void generate(String direction, String outFolderBase, String templateFolderName) {
-        ClassLoader cl = WorkOrderSplitMapper.class.getClassLoader();
+        ClassLoader cl = WorkOrderSplitRequestMapper.class.getClassLoader();
         ResourcePatternResolver resolver = new PathMatchingResourcePatternResolver(cl);
         Date date = new Date();
         SimpleDateFormat format = new SimpleDateFormat("yyyy_MMM_dd_hh_mm_ss");

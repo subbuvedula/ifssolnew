@@ -88,6 +88,7 @@ public class SolNode {
         this.multiple = multiple;
     }
 
+
     public SolNodesRoot getSolNodesRoot() {
         return solNodesRoot;
     }

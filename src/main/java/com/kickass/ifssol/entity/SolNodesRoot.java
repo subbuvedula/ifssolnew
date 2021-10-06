@@ -2,15 +2,12 @@ package com.kickass.ifssol.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.kickass.ifssol.mapper.incoming.WorkOrderSplitMapper;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
-import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.core.io.support.ResourcePatternResolver;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +20,7 @@ public class SolNodesRoot {
     @JsonIgnore
     private static Logger LOGGER = LogManager.getLogger(TxnMapping.class);
 
+    private String responseNodeName;
     private String name;
     private String rootClass;
     private String sendQueue;
@@ -87,7 +85,7 @@ public class SolNodesRoot {
 
     public void setMapperFunctionName(String mapperFunctionName) {
         this.mapperFunctionName = mapperFunctionName;
-        if (mapperFunctionName != null) {
+        if (mapperFunctionName != null && !mapperFunctionName.trim().isEmpty()) {
             try {
                 Class functionClass = Class.forName(mapperFunctionName);
                 Function function = (Function) functionClass.getDeclaredConstructor().newInstance();
@@ -196,6 +194,14 @@ public class SolNodesRoot {
             e.printStackTrace();
         }
         return sql;
+    }
+
+    public String getResponseNodeName() {
+        return responseNodeName;
+    }
+
+    public void setResponseNodeName(String responseNodeName) {
+        this.responseNodeName = responseNodeName;
     }
 
     public enum FieldMegeStrategy {

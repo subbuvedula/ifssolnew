@@ -1,19 +1,14 @@
-package com.kickass.ifssol.mapper;
+package com.kickass.ifssol.mapper.response;
 
 import com.ibaset.solumina.oagis.LocationUserAreaType;
-import com.kickass.ifssol.entity.TxnMapping;
-import com.kickass.ifssol.util.reflect.DocTemplate;
-import com.kickass.ifssol.util.reflect.DocTemplateMap;
+import com.kickass.ifssol.entity.SolNodesRoot;
+import com.kickass.ifssol.mapper.IResponseMapper;
 import ifs.fnd.ap.Record;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.apache.xmlbeans.XmlObject;
 import org.openapplications.oagis.x9.*;
-import org.openapplications.oagis.x9.impl.IdentifierTypeImpl;
-import org.openapplications.oagis.x9.impl.LocationTypeImpl;
-import org.openapplications.oagis.x9.impl.UserAreaTypeImpl;
 import org.springframework.stereotype.Component;
-import org.w3c.dom.Node;
 
 import javax.xml.transform.Result;
 import javax.xml.transform.stream.StreamResult;
@@ -23,9 +18,14 @@ import java.util.List;
 import java.util.function.Function;
 
 @Component
-public class SyncLocationMapper implements IMapper<SyncLocationDocument>, Function<Record, XmlObject> {
+public class SyncLocationResponseMapper implements IResponseMapper, Function<Record, XmlObject> {
 
     public static final List<String> FIELDS = new ArrayList<>();
+    private SolNodesRoot solNodeRoot;
+
+    public void setSolNodesRoot(SolNodesRoot solNodesRoot) {
+        this.solNodeRoot = solNodesRoot;
+    }
 
     public static final String ACTION_CODE = "cf$_action_code";
     public static final String TYPE = "cf$_type";
@@ -36,7 +36,7 @@ public class SyncLocationMapper implements IMapper<SyncLocationDocument>, Functi
     public static final String PARENT1_ID = "cf$_parent1_id";
     public static final String PARENT2_TYPE = "cf$_parent2_type";
     public static final String PARENT2_ID = "cf$_parent2_id";
-    private static Logger LOGGER = LogManager.getLogger(SyncLocationMapper.class);
+    private static Logger LOGGER = LogManager.getLogger(SyncLocationResponseMapper.class);
 
     static {
         FIELDS.add(ACTION_CODE);
@@ -133,10 +133,6 @@ public class SyncLocationMapper implements IMapper<SyncLocationDocument>, Functi
         return doc;
     }
 
-    @Override
-    public SyncLocationDocument map(Record record, TxnMapping txnMapping, DocTemplateMap docTemplateMap) {
-        return null;
-    }
 
     @Override
     public XmlObject apply(Record record)  {

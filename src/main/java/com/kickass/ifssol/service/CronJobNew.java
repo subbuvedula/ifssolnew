@@ -50,6 +50,7 @@ public class CronJobNew implements Runnable {
             e.printStackTrace();
         }
         */
+
         RecordCollection recordCollection = null;
         try {
             LOGGER.info("Getting the records from database for " + solNodesRoot.getName());
@@ -61,21 +62,24 @@ public class CronJobNew implements Runnable {
             LOGGER.error("Could not obtain Records from IFS Database for transaction : " + solNodesRoot.getName(), ape);
             return;
         }
+
         if (recordCollection == null) {
             LOGGER.error("RecordCollection is null for " + solNodesRoot.getName());
             return;
         }
-
+        Function<Record, XmlObject> func = solNodesRoot.getMapperFunction();
         int size = recordCollection.size();
-
         for( int i=0; i<size; i++) {
             Record r = recordCollection.get(i);
             String logId = (String) r.findValue(LOG_ID);
             XmlObject xmlObject = null;
             try {
-                xmlObject = genericDataMapper.mapToSol(r,solNodesRoot,docTemplateMap);
-                Function<Record, XmlObject> func = solNodesRoot.getMapperFunction();
-                //xmlObject = func.apply(r);
+                if (func != null) {
+                    xmlObject = func.apply(r);
+                }
+                else {
+                    xmlObject = genericDataMapper.mapToSol(r,solNodesRoot,docTemplateMap);
+                }
                 messagePublisher.publish(solNodesRoot.getSendQueue(), xmlObject);
                 LOGGER.info("Updating the txn status for txn : " + solNodesRoot.getName() + ", logId : " + logId);
                 if (solNodesRoot.isUpdateStatus()) {

@@ -3,13 +3,8 @@ package com.kickass.ifssol.config;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kickass.ifssol.dataaccessor.CommonDataAccessor;
 import com.kickass.ifssol.entity.SolNodesRoot;
-import com.kickass.ifssol.entity.TxnMapping;
-import com.kickass.ifssol.entity.TxnMappingRoot;
-import com.kickass.ifssol.mapper.GenericDataMapper;
 import com.kickass.ifssol.mapper.GenericDataMapperNew;
-import com.kickass.ifssol.mapper.incoming.WorkOrderSplitMapper;
 import com.kickass.ifssol.messaging.MessagePublisher;
-import com.kickass.ifssol.service.CronJob;
 import com.kickass.ifssol.service.CronJobNew;
 import com.kickass.ifssol.util.reflect.DocTemplateMap;
 import com.kickass.ifssol.util.reflect.Reflector;
@@ -43,6 +38,7 @@ public class SolIFSMappingConfigNew {
     private List<SolNodesRoot> outgoingSolNodesRootList = new ArrayList<>();
     private List<SolNodesRoot> incomingSolNodesRootList = new ArrayList<>();
     private Map<String,SolNodesRoot> incomingSolNodesRootsByQueueNameMap = new HashMap<>();
+    private Map<String,SolNodesRoot> solNodesRootsByNameMap = new HashMap<>();
 
 
     private ThreadPoolTaskScheduler threadPoolTaskScheduler = new ThreadPoolTaskScheduler();
@@ -100,7 +96,17 @@ public class SolIFSMappingConfigNew {
 
         for(SolNodesRoot incoming : incomingSolNodesRootList) {
             incomingSolNodesRootsByQueueNameMap.put(incoming.getReceiveQueue(), incoming);
+            solNodesRootsByNameMap.put(incoming.getName(), incoming);
+
         }
+
+        for(SolNodesRoot outgoing : outgoingSolNodesRootList) {
+            solNodesRootsByNameMap.put(outgoing.getName(), outgoing);
+        }
+    }
+
+    public SolNodesRoot getByName(String name) {
+        return solNodesRootsByNameMap.get(name);
     }
 
     public SolNodesRoot getByQueueName(String queueName) {

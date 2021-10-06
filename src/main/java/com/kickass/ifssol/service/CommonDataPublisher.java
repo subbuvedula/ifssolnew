@@ -2,7 +2,7 @@ package com.kickass.ifssol.service;
 
 import com.ibaset.solumina.oagis.LocationUserAreaType;
 import com.kickass.ifssol.dataaccessor.CommonDataAccessor;
-import com.kickass.ifssol.mapper.SyncLocationMapper;
+import com.kickass.ifssol.mapper.response.SyncLocationResponseMapper;
 import com.kickass.ifssol.messaging.MessagePublisher;
 import ifs.fnd.ap.Record;
 import ifs.fnd.ap.RecordCollection;
@@ -19,9 +19,6 @@ import org.openapplications.oagis.x9.impl.SyncLocationTypeImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
-
-import java.util.Collection;
-import java.util.function.Function;
 
 @Component
 public class CommonDataPublisher {
@@ -65,35 +62,35 @@ public class CommonDataPublisher {
         RecordCollection rc = new RecordCollection();
 
         Record record = new Record();
-        record.add(SyncLocationMapper.ACTION_CODE, "ADD");
+        record.add(SyncLocationResponseMapper.ACTION_CODE, "ADD");
         rc.add(record);
 
         record = new Record();
-        record.add(SyncLocationMapper.NAME, "SyncLocation");
+        record.add(SyncLocationResponseMapper.NAME, "SyncLocation");
         rc.add(record);
 
         record = new Record();
-        record.add(SyncLocationMapper.TYPE, "Type");
+        record.add(SyncLocationResponseMapper.TYPE, "Type");
         rc.add(record);
 
         record = new Record();
-        record.add(SyncLocationMapper.ID, "ID123456");
+        record.add(SyncLocationResponseMapper.ID, "ID123456");
         rc.add(record);
 
         record = new Record();
-        record.add(SyncLocationMapper.PARENT1_ID, "Parent1Id");
+        record.add(SyncLocationResponseMapper.PARENT1_ID, "Parent1Id");
         rc.add(record);
 
         record = new Record();
-        record.add(SyncLocationMapper.PARENT2_ID, "Parent2Id");
+        record.add(SyncLocationResponseMapper.PARENT2_ID, "Parent2Id");
         rc.add(record);
 
         record = new Record();
-        record.add(SyncLocationMapper.PARENT1_TYPE, "Parent1Type");
+        record.add(SyncLocationResponseMapper.PARENT1_TYPE, "Parent1Type");
         rc.add(record);
 
         record = new Record();
-        record.add(SyncLocationMapper.PARENT2_TYPE, "Parent2Type");
+        record.add(SyncLocationResponseMapper.PARENT2_TYPE, "Parent2Type");
         rc.add(record);
         return rc;
     }
