@@ -67,6 +67,7 @@ public class CronJobNew implements Runnable {
             LOGGER.error("RecordCollection is null for " + solNodesRoot.getName());
             return;
         }
+
         Function<Record, XmlObject> func = solNodesRoot.getMapperFunction();
         int size = recordCollection.size();
         for( int i=0; i<size; i++) {
