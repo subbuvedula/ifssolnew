@@ -1,0 +1,12 @@
+{
+  "name" : "Work Order Issue",
+  "rootClass" : "org.openapplications.oagis.x9.WorkOrderDocument",
+  "mapperFunctionName" : "com.kickass.ifssol.mapper.response.WorkOrderIssueResponseMapper",
+  "enabled" : "true",
+  "updateStatus" : "true",
+  "cronExpression" : "0/10000 * * * * *",
+  "enabled" : "true",
+  "sendQueue" : "com.ibaset.receive.request.woissue",
+  "query" : "SELECT cf$_log_id, cf$_log_timestamp, cf$_log_type,cf$_order_no, cf$_alt_order_no, cf$_cust_order_no,cf$_status, cf$_order_type, cf$_start_date, cf$_end_date,cf$_part_no, cf$_order_qty FROM <_SCHEMA_>.SOLINT_WO_ISSUE_LOG_CLV WHERE cf$_process_flag = :STATE ORDER BY cf$_log_id",
+  "updateStoredproc" : "Update_Work_Order_Issue.sql"
+ }

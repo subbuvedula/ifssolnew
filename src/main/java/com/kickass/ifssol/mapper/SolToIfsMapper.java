@@ -7,6 +7,7 @@ import com.kickass.ifssol.entity.SolNodesRoot;
 import com.kickass.ifssol.util.reflect.DocTemplate;
 import com.kickass.ifssol.util.reflect.DocTemplateMap;
 import ifs.fnd.ap.BindVariableDirection;
+import ifs.fnd.ap.DataType;
 import ifs.fnd.ap.Record;
 import ifs.fnd.ap.RecordAttribute;
 import org.apache.commons.lang3.StringUtils;
@@ -289,6 +290,7 @@ public class SolToIfsMapper {
                                   Record record,
                                   SolNodesRoot.FieldMegeStrategy fieldMegeStrategy) {
         BindVariableDirection bindVariableDirection = getBindVariableDirection(directionStr);
+        RecordAttribute recordAttribute = null;
         if (bindVariableDirection == null) {
             return;
         }
@@ -298,26 +300,29 @@ public class SolToIfsMapper {
 
             if (existingValue !=null) {
                 if (fieldMegeStrategy == SolNodesRoot.FieldMegeStrategy.APPEND) {
-                        RecordAttribute recordAttribute = record.add(ifsName, existingValue.toString() + "," + value.toString());
+                         recordAttribute = record.add(ifsName, existingValue.toString() + "," + value.toString());
                         recordAttribute.setBindVariableDirection(bindVariableDirection);
                 }
             }
             else  {
-                record.add(ifsName, value.toString());
+                recordAttribute =recordAttribute = record.add(ifsName, value.toString());
             }
         }
         else if (value instanceof BigDecimal) {
-            record.add(ifsName, (BigDecimal) value);
+            float val = ((BigDecimal)value).floatValue();
+                recordAttribute =record.add(ifsName, val, DataType.FLOAT);
         }
         else if (value instanceof Boolean) {
-            record.add(ifsName, (Boolean) value);
+                recordAttribute =record.add(ifsName, (Boolean) value);
         }
         else if (value instanceof Long) {
-            record.add(ifsName, (Long) value);
+                recordAttribute =record.add(ifsName, (Long) value);
         }
         else if (value instanceof Double) {
-            record.add(ifsName, (Double) value);
+                recordAttribute = record.add(ifsName, (Double) value);
         }
+
+        recordAttribute.setBindVariableDirection(bindVariableDirection);
 
     }
 

@@ -88,7 +88,7 @@ public class SoluminaMessageListener implements MessageListener {
                 DocTemplateMap docTemplateMap = reflector.process(responseNodeRoot.getRootClass());
                 CronJobNew cronJobNew = new CronJobNew(commonDataAccessor,
                         messagePublisher, responseNodeRoot, docTemplateMap, genericDataMapper);
-                executor.execute(cronJobNew);
+                cronJobNew.run();
             }
             catch (Exception ex) {
                 LOGGER.error("Unable to process " + responseNodeRoot.getRootClass(), ex);

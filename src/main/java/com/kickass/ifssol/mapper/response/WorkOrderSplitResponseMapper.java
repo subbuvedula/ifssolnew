@@ -39,7 +39,7 @@ public class WorkOrderSplitResponseMapper implements IResponseMapper, Function<R
         ProductionOrderReferenceType productionOrderReferenceType2 = splitWIPDestinationType2.addNewProductionOrderReference();
         productionOrderReferenceType2.addNewDocumentID().addNewID().setStringValue((String)record.findValue("CF$_SPLIT2_ORDER_NO")); //ID
         productionOrderReferenceType2.addNewSerializedLot().addNewLot().addNewSerialNumber().setStringValue((String)record.findValue("CF$_SPLIT2_SERIAL_NO"));
-        splitWIPDestinationType2.addNewItemQuantity().setBigDecimalValue((BigDecimal) record.findValue("CF$_SPLIT2_QTY")); //Item Quantity
+        splitWIPDestinationType2.addNewItemQuantity().setBigDecimalValue(new BigDecimal((Double)record.findValue("CF$_SPLIT2_QTY"))); //Item Quantity
         return  doc;
     }
 }

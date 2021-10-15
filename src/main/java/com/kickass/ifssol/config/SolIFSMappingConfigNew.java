@@ -148,7 +148,7 @@ public class SolIFSMappingConfigNew {
         for(SolNodesRoot solNodesRoot : outgoingSolNodesRootList) {
             String cronExpression = solNodesRoot.getCronExpression();
 
-            if (!solNodesRoot.isEnabled()) {
+            if (!solNodesRoot.isEnabled() || !solNodesRoot.isScheduleJob()) {
                 continue;
             }
 

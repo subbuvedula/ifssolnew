@@ -73,7 +73,7 @@ public class CommonDataAccessor {
                 record.add(name, value.toString()).setBindVariableDirection(direction);
         }
         else if (value instanceof BigDecimal) {
-            record.add(name, (BigDecimal) value).setBindVariableDirection(direction);
+            record.add(name, ((BigDecimal) value).floatValue()).setBindVariableDirection(direction);
         }
         else if (value instanceof Boolean) {
             record.add(name, (Boolean) value).setBindVariableDirection(direction);;

@@ -1,0 +1,11 @@
+{
+  "name" : "Work Order Split Response",
+  "rootClass" : "org.openapplications.oagis.x9.WorkOrderDocument",
+  "mapperFunctionName" : "com.kickass.ifssol.mapper.response.WorkOrderSplitResponseMapper",
+  "enabled" : "true",
+  "updateStatus" : "true",
+  "scheduleJob" : "false",
+  "sendQueue" : "com.ibaset.receive.request.wosplit",
+  "query" : "SELECT cf$_log_id, cf$_log_timestamp, cf$_log_type, cf$_source_order_no, cf$_source_qty, cf$_source_lot_no, cf$_source_serial_no,cf$_split1_order_no, cf$_split1_qty, cf$_split1_lot_no, cf$_split1_serial_no,cf$_split2_order_no, cf$_split2_qty, cf$_split2_lot_no, cf$_split2_serial_no FROM <_SCHEMA_>.SOLINT_WO_SPLIT_LOG_CLV WHERE cf$_process_flag = :STATE  ORDER BY cf$_log_id",
+  "updateStoredproc" : "Update_Work_Order_Split_Response.sql"
+ }

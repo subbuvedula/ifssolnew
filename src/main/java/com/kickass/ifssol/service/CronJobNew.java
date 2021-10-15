@@ -94,6 +94,4 @@ public class CronJobNew implements Runnable {
 
         }
     }
-
-
 }

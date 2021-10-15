@@ -28,6 +28,7 @@ public class SolNodesRoot {
     private String mapperFunctionName;
     private boolean enabled;
     private String updateStoredproc;
+    private boolean scheduleJob = true;
 
     private String fieldMergeStrategy = FieldMegeStrategy.APPEND.name();
 
@@ -194,6 +195,14 @@ public class SolNodesRoot {
             e.printStackTrace();
         }
         return sql;
+    }
+
+    public boolean isScheduleJob() {
+        return scheduleJob;
+    }
+
+    public void setScheduleJob(boolean scheduleJob) {
+        this.scheduleJob = scheduleJob;
     }
 
     public String getResponseNodeName() {

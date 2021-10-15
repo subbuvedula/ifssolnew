@@ -1,18 +1,7 @@
 DECLARE
-  -- Parameters
---  source_order_no_ VARCHAR2(100) := :SOURCE_WO_NO;
---  source_qty_ NUMBER := :SOURCE_QTY;
---  source_serial_no_ VARCHAR2(2000) := :SOURCE_SERIAL_NO;
---  split1_order_no_ VARCHAR2(100) := :SPLIT1_WO_NO;
---  split1_qty_ NUMBER := :SPLIT1_QTY;
---  split1_serial_no_ VARCHAR2(2000) := :SPLIT1_SERIAL_NO;
---  split2_order_no_ VARCHAR2(100) := :SPLIT2_WO_NO;
---  split2_qty_ NUMBER := :SPLIT2_QTY;
---  split2_serial_no_ VARCHAR2(2000) := :SPLIT2_SERIAL_NO;
-  source_order_no_ VARCHAR2(100) := :WO_NO;
-  split2_qty_ NUMBER := :SPLIT_QTY;
+  source_order_no_ VARCHAR2(100) := :SOURCE_ORDER_NO_;
+  split2_qty_ NUMBER := :SPLIT_QTY_;
 
-  -- variables
   order_no_ VARCHAR2(100);
   rel_no_   VARCHAR2(10);
   seq_no_   VARCHAR2(10);
@@ -35,7 +24,6 @@ DECLARE
   new_seq_no_ VARCHAR2(10);
 
 BEGIN
-  -- initialization
   order_no_ := source_order_no_;
   rel_no_ := '*';
   seq_no_ := '*';
@@ -65,25 +53,6 @@ BEGIN
   IFSAPP.Message_SYS.Add_Attribute(msg_, 'ORDER_CODE', order_code_);
   IFSAPP.Message_SYS.Add_Attribute(msg_, 'SPLIT_REASON_CODE', split_reason_);
 
-  info_ := '';
+  info_ := NULL;
   IFSAPP.Shop_Order_Split_Util_API.Receive_Splits_In_Message__( info_ ,order_no_ , rel_no_ , seq_no_ , msg_ );
-
-  -- response
-  --IF (info_ IS NULL) THEN
-  --  INSERT INTO ifsapp.solint_wo_split_log_clt (
-   --   cf$_log_id, cf$_log_timestamp, cf$_log_type, rowversion, cf$_process_flag,
-     -- cf$_trans_type,
-     -- cf$_source_order_no, cf$_source_qty, cf$_source_lot_no, cf$_source_serial_no,
-     -- cf$_split1_order_no, cf$_split1_qty, cf$_split1_lot_no, cf$_split1_serial_no,
-     -- cf$_split2_order_no, cf$_split2_qty, cf$_split2_lot_no, cf$_split2_serial_no
-    --)
-    -- VALUES (
-    --  to_char(SYSTIMESTAMP, 'YYYYMMDDHH24MISSFF3'), SYSDATE, 'WorkOrderSplit', SYSDATE, 'NEW',
-    --  'RESPONSE',
-    --  order_no_, NULL, '', '',
-    --  order_no_, NULL, '', '',
-    --  new_shop_order_no_, split_qty_, '', ''
-    -- );
-  -- END IF;
-
 END;
