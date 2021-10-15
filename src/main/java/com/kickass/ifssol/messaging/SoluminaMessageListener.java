@@ -71,16 +71,17 @@ public class SoluminaMessageListener implements MessageListener {
                 String xmlString = textMessage.getText();
                 LOGGER.info(xmlString);
                 XmlObject xmlObject = XmlObject.Factory.parse(xmlString);
-                process(root, xmlObject);
+                processRequest(root, xmlObject);
+                sendResponse(root);
+
             } catch (JMSException | XmlException | MappingException | APException e) {
                 LOGGER.error("Failed to get message from the queue", e);
             }
 
-            processResponse(root);
         }
     }
 
-    private void processResponse(SolNodesRoot root)  {
+    private void sendResponse(SolNodesRoot root)  {
         String responseNodeName = root.getResponseNodeName();
         if (!StringUtils.isEmpty(responseNodeName)) {
             SolNodesRoot responseNodeRoot = config.getByName(responseNodeName.trim());
@@ -96,7 +97,7 @@ public class SoluminaMessageListener implements MessageListener {
         }
     }
 
-    private void process(SolNodesRoot root, XmlObject xmlObject) throws APException, MappingException {
+    private void processRequest(SolNodesRoot root, XmlObject xmlObject) throws APException, MappingException {
         if (root.getMapperFunction() != null) {
             XmlObject response = (XmlObject)root.getMapperFunction().apply(xmlObject);
         }
