@@ -1,8 +1,12 @@
 package com.kickass.ifssol.valueprovider;
 
+import org.springframework.stereotype.Component;
+
 import java.util.Calendar;
 import java.util.Map;
 import java.util.function.Function;
+
+@Component
 public class CurrentTimeProvider<T,R> implements Function<Map, Calendar>{
 
     @Override

@@ -1,18 +1,23 @@
 package com.kickass.ifssol.mapper.response;
 
 import com.kickass.ifssol.mapper.IResponseMapper;
+import com.kickass.ifssol.valueprovider.CurrentTimeProvider;
 import ifs.fnd.ap.Record;
 import org.apache.xmlbeans.XmlObject;
 import org.openapplications.oagis.x9.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.function.Function;
 
 @Component
 public class WorkOrderIssueResponseMapper implements IResponseMapper, Function<Record, XmlObject> {
+
+    private CurrentTimeProvider currentTimeProvider = new CurrentTimeProvider();
 
     @Override
     public XmlObject apply(Record record)  {
@@ -44,8 +49,31 @@ public class WorkOrderIssueResponseMapper implements IResponseMapper, Function<R
         Calendar startDateCal = Calendar.getInstance();
         startDateCal.setTime(startDate);
 
-        WorkOrderHeaderDocument doc = WorkOrderHeaderDocument.Factory.newInstance();
-        WorkOrderHeaderType header = doc.addNewWorkOrderHeader();
+        SyncWorkOrderDocument syncWorkOrderDocument = SyncWorkOrderDocument.Factory.newInstance();
+        SyncWorkOrderType syncWorkOrderType = syncWorkOrderDocument.addNewSyncWorkOrder();
+
+        syncWorkOrderType.setLanguageCode("en-US");
+        syncWorkOrderType.setVersionID("9_4");
+        syncWorkOrderType.setReleaseID("9_4");
+        syncWorkOrderType.setSystemEnvironmentCode("Production");
+
+
+        ApplicationAreaType applicationAreaType = syncWorkOrderType.addNewApplicationArea();
+        applicationAreaType.addNewSender();
+        applicationAreaType.setCreationDateTime(currentTimeProvider.apply(null));
+        applicationAreaType.addNewBODID();
+
+        SyncWorkOrderDataAreaType syncWorkOrderDataAreaType = syncWorkOrderType.addNewDataArea();
+        SyncType syncType = syncWorkOrderDataAreaType.addNewSync();
+        ActionCriteriaType actionCriteriaType = syncType.addNewActionCriteria();
+        ActionExpressionType actionExpressionType = actionCriteriaType.addNewActionExpression();
+        actionExpressionType.setActionCode("Add");
+        actionExpressionType.setStringValue("/SyncWorkOrder/DataArea/WorkOrder[WorkOrderHeader/DocumentID/ID='SHOPORDERNO']");
+        //WorkOrderHeaderDocument doc = WorkOrderHeaderDocument.Factory.newInstance();
+        WorkOrderType workOrderType = syncWorkOrderDataAreaType.addNewWorkOrder();
+
+        WorkOrderHeaderType header = workOrderType.addNewWorkOrderHeader();
+
 
         DocumentIDType documentID = header.addNewDocumentID();
         IdentifierType idType = documentID.addNewID();
@@ -73,7 +101,38 @@ public class WorkOrderIssueResponseMapper implements IResponseMapper, Function<R
         header.addNewBOMReference().addNewDocumentID().addNewID().setStringValue(partNo);
         header.addNewOrderQuantity().setBigDecimalValue(new BigDecimal(orderQty));
 
+        ItemInstanceType itemInstanceType = header.addNewItemInstance();
+        ItemIDType itemIDType = itemInstanceType.addNewItemID();
+        itemIDType.setAgencyRole("Upgrade"); //TODO
+        itemIDType.addNewID().setStringValue("SFWID_ORDER_DESC.ALIAS_PART_NO"); //TODO
+        itemIDType.addNewRevisionID().setStringValue("SFWID_ORDER_DESC.ALIAS_PART_CHG"); //TODO
 
-        return doc;
+        SequencedCodesType codesType = itemInstanceType.addNewClassification().addNewCodes();
+        SequencedCodeType codeType1 = codesType.addNewCode();
+        SequencedCodeType codeType2 = codesType.addNewCode();
+        codeType1.setSequence(new BigInteger("1")); //TODO
+        codeType1.setStringValue("SFWID_ORDER_DESC.ITEM_TYPE"); //TODO
+        codeType2.setSequence(new BigInteger("2")); //TODO
+        codeType2.setName("PartSubType");
+        codeType2.setStringValue("SFWID_ORDER_DESC.ITEM_SUBTYPE"); //TODO
+
+        SpecificationType specificationType = itemInstanceType.addNewSpecification();
+        PropertyType propertyType = specificationType.addNewProperty();
+        NameValuePairType nameValuePairType = propertyType.addNewNameValue();
+        nameValuePairType.setName("IsSameAsBuildPart"); //TODO
+        nameValuePairType.setStringValue("true or false"); //TODO
+
+        LocationType locationType = header.addNewSite();
+        locationType.addNewID().setStringValue("SFWID_ORDER_DESC.ASGND_WORK_LOC"); //TODO
+
+        PartyType partyType = header.addNewParty();
+        PartyIDsType partyIDsType = partyType.addNewPartyIDs();
+        partyIDsType.addNewID().setStringValue("SFWID_ORDER_DESC.ORDER_CUST_ID"); //TODO
+
+        header.addNewPriorityCode().setStringValue("SFWID_ORDER_DESC.SCHED_PRIORITY"); //TODO
+
+        header.addNewOrderQuantity().setBigDecimalValue(new BigDecimal("5"));
+
+        return syncWorkOrderDocument;
     }
 }
