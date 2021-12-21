@@ -6,6 +6,7 @@ import com.kickass.ifssol.entity.SolNodesRoot;
 import com.kickass.ifssol.mapper.GenericDataMapperNew;
 import com.kickass.ifssol.messaging.MessagePublisher;
 import com.kickass.ifssol.service.CronJobNew;
+import com.kickass.ifssol.util.StoredProcLoader;
 import com.kickass.ifssol.util.reflect.DocTemplateMap;
 import com.kickass.ifssol.util.reflect.Reflector;
 import org.apache.commons.lang3.StringUtils;
@@ -35,6 +36,8 @@ public class SolIFSMappingConfigNew {
     @Autowired
     private Environment env;
 
+    @Autowired
+    private StoredProcLoader storedProcLoader;
     private List<SolNodesRoot> outgoingSolNodesRootList = new ArrayList<>();
     private List<SolNodesRoot> incomingSolNodesRootList = new ArrayList<>();
     private Map<String,SolNodesRoot> incomingSolNodesRootsByQueueNameMap = new HashMap<>();

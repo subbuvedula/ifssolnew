@@ -2,7 +2,9 @@ package com.kickass.ifssol.dataaccessor;
 
 import com.kickass.ifssol.entity.SolNodesRoot;
 import com.kickass.ifssol.ifsproxy.IFSServerProxy;
+import com.kickass.ifssol.util.StoredProcLoader;
 import ifs.fnd.ap.*;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,12 +17,15 @@ import java.util.Map;
 public class CommonDataAccessor {
     //@Autowired
     private IFSServerProxy ifsServerProxy;
+    private StoredProcLoader storedProcLoader;
     private static Logger LOGGER = LogManager.getLogger(CommonDataAccessor.class);
     private static final String SCHEMA_PLACEHOLDER_VALUE = "<_SCHEMA_>";
 
+
     @Autowired
-    public CommonDataAccessor(IFSServerProxy ifsServerProxy) {
+    public CommonDataAccessor(IFSServerProxy ifsServerProxy, StoredProcLoader storedProcLoader) {
         this.ifsServerProxy = ifsServerProxy;
+        this.storedProcLoader = storedProcLoader;
     }
 
     public RecordCollection getData(String query) throws APException {
@@ -53,7 +58,13 @@ public class CommonDataAccessor {
         cmd.execute();
     }
 
-    public PlsqlCommand getPlSqlCommand(String storedProcString) {
+    //public PlsqlCommand getPlSqlCommand(String storedProcString) {
+    //    storedProcString = storedProcString.replaceAll(SCHEMA_PLACEHOLDER_VALUE, ifsServerProxy.getSchema());
+    //    return new PlsqlCommand(ifsServerProxy.getServer(), storedProcString);
+    //}
+
+    public PlsqlCommand getPlSqlCommand(SolNodesRoot root) {
+        String storedProcString = storedProcLoader.getStoredProc(root);
         storedProcString = storedProcString.replaceAll(SCHEMA_PLACEHOLDER_VALUE, ifsServerProxy.getSchema());
         return new PlsqlCommand(ifsServerProxy.getServer(), storedProcString);
     }

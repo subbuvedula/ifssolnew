@@ -8,6 +8,7 @@ import com.kickass.ifssol.mapper.IRequestMapper;
 import com.kickass.ifssol.mapper.MappingException;
 import com.kickass.ifssol.mapper.SolToIfsMapper;
 import com.kickass.ifssol.service.CronJobNew;
+import com.kickass.ifssol.util.StoredProcLoader;
 import com.kickass.ifssol.util.reflect.DocTemplate;
 import com.kickass.ifssol.util.reflect.DocTemplateMap;
 import com.kickass.ifssol.util.reflect.Reflector;
@@ -21,6 +22,7 @@ import org.apache.log4j.Logger;
 import org.apache.xmlbeans.XmlException;
 import org.apache.xmlbeans.XmlObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
 import javax.jms.JMSException;
@@ -37,6 +39,9 @@ public class SoluminaMessageListener implements MessageListener {
 
     @Autowired
     private SolIFSMappingConfigNew config;
+
+    @Autowired
+    private StoredProcLoader storedProcLoader;
 
     @Autowired
     private SolToIfsMapper solToIfsMapper;
@@ -99,15 +104,25 @@ public class SoluminaMessageListener implements MessageListener {
 
     private void processRequest(SolNodesRoot root, XmlObject xmlObject) throws APException, MappingException {
         if (root.getMapperFunction() != null) {
-            XmlObject response = (XmlObject)root.getMapperFunction().apply(xmlObject);
+            PlsqlCommand command = commonDataAccessor.getPlSqlCommand(root);
+            Record record = command.getBindVariables();
+            MapperInput input = new MapperInput();
+            input.record = record;
+            input.xmlObject = xmlObject;
+             root.getMapperFunction().apply(input);
+            commonDataAccessor.execute(command);
         }
         else {
             DocTemplate docTemplate = reflector.process(xmlObject.getClass(), true);
-            PlsqlCommand command = commonDataAccessor.getPlSqlCommand(root.getUpdateStatement());
+            PlsqlCommand command = commonDataAccessor.getPlSqlCommand(root);
             Record record = command.getBindVariables();
             solToIfsMapper.map(xmlObject, root, docTemplate.getDocTemplateMap(), record);
             commonDataAccessor.execute(command);
         }
+    }
 
+    public class MapperInput {
+        public Record record;
+        public XmlObject xmlObject;
     }
 }

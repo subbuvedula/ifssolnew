@@ -41,6 +41,8 @@ public class JmsConfig implements JmsListenerConfigurer {
     public ActiveMQConnectionFactory connectionFactory(){
         LOGGER.info("spring.activemq.broker-url : " + environment.getProperty("spring.activemq.broker-url"));
         ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory();
+        String brokerURL = environment.getProperty("spring.activemq.broker-url");
+
         connectionFactory.setBrokerURL(environment.getProperty("spring.activemq.broker-url"));
         connectionFactory.setPassword(environment.getProperty("spring.activemq.password"));
         connectionFactory.setUserName(environment.getProperty("spring.activemq.user"));
@@ -64,20 +66,22 @@ public class JmsConfig implements JmsListenerConfigurer {
 
     @Override
     public void configureJmsListeners(JmsListenerEndpointRegistrar registrar) {
-        SimpleJmsListenerEndpoint endpoint = new SimpleJmsListenerEndpoint();
-        endpoint.setId("Solumina");
 
         Collection<SolNodesRoot> solNodesRootList = solIFSMappingConfig.getIncomingSolNodesRootList();
         boolean hasAtleatOneMesssageListener = false;
         for(SolNodesRoot solNodesRoot : solNodesRootList) {
             if (solNodesRoot.isEnabled() && !StringUtils.isEmpty(solNodesRoot.getReceiveQueue())) {
+                SimpleJmsListenerEndpoint endpoint = new SimpleJmsListenerEndpoint();
+                endpoint.setId(solNodesRoot.getName());
+
                 endpoint.setDestination(solNodesRoot.getReceiveQueue());
                 endpoint.setMessageListener(soluminaMessageListener);
+                registrar.registerEndpoint(endpoint);
                 hasAtleatOneMesssageListener = true;
             }
         }
         if (hasAtleatOneMesssageListener) {
-            registrar.registerEndpoint(endpoint);
+            //registrar.registerEndpoint(endpoint);
         }
     }
 }
